@@ -1,0 +1,30 @@
+﻿@model BikeShop.Models.Bike
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+<form method="post" action="/Bike/Update">
+    @Html.LabelFor(b => b.Name)
+    <br />
+    @Html.TextBoxFor(b => b.Name, new { value = Model.Name })
+    <br />
+    @Html.LabelFor(b => b.Description)
+    <br />
+    @Html.TextBoxFor(b => b.Description, new { value = Model.Description })
+    <br />
+    @Html.LabelFor(b => b.FabricationDate)
+    <br />
+    <input type="date" name="FabricationDate" value="@Model.FabricationDate" />
+    <br />
+    @Html.LabelFor(b => b.Price)
+    <br />
+    <input type="number" name="Price" value="@Model.Price" />
+    <br />
+
+    @Html.HiddenFor(b => b.BikeId, new { value = Model.BikeId })
+
+    <button type="submit">Update bike</button>
+
+</form>

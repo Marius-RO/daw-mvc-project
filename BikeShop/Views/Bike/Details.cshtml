@@ -1,0 +1,18 @@
+﻿@model BikeShop.Models.Bike
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>@Model.Name, @Model.Description, @Model.FabricationDate, @Model.Price</h2>
+
+@Html.ActionLink("Inapoi la biciclete", "Index")
+
+<br />
+
+@Html.ActionLink("Editeaza detalii", "Edit", new { id = @Model.BikeId })
+
+<form method="post" action="/Bike/Delete/@Model.BikeId">
+    <button type="submit">Sterge bicicleta</button>
+</form>
+
+

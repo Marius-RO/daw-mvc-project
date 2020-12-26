@@ -1,0 +1,30 @@
+﻿@model BikeShop.Models.Bike
+@{
+    ViewBag.Title = "New";
+}
+
+<h2>New</h2>
+
+<form method="post" action="/Bike/Create">
+    @Html.LabelFor(b => b.Name)
+    <br />
+    @Html.TextBoxFor(b => b.Name)
+    <br />
+    @Html.LabelFor(b => b.Description)
+    <br />
+    @Html.TextBoxFor(b => b.Description)
+    <br />
+
+    @Html.LabelFor(b => b.FabricationDate)
+    <br />
+    <input type="date" name="FabricationDate" />
+    <br />
+
+    @Html.LabelFor(b => b.Price)
+    <br />
+    <input type="number" name="Price" />
+    <br />
+    <br />
+    <button type="submit">Add bike</button>
+
+</form>

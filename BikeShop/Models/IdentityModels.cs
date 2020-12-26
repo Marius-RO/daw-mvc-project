@@ -26,6 +26,7 @@ namespace BikeShop.Models
         public DbSet<Accessory> Accessories { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<DeliveryInfo> DeliveryInfos { get; set; }
+        public object Bike { get; internal set; }
 
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
