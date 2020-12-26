@@ -20,9 +20,17 @@ namespace BikeShop.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+
+        public DbSet<Bike> Bikes { get; set; }
+        public DbSet<Piece> Pieces { get; set; }
+        public DbSet<Accessory> Accessories { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<DeliveryInfo> DeliveryInfos { get; set; }
+
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
+
         }
 
         public static ApplicationDbContext Create()
