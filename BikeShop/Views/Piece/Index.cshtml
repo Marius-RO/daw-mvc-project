@@ -1,0 +1,80 @@
+﻿@model List<BikeShop.Models.Piece>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Piese</h2>
+
+@Html.ActionLink("Adauga Piesa", "New", "Piece", new { @class = "btn btn-primary" })
+<br />
+<br />
+
+<table id="pieces" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Descriere</th>
+            <th>Actiuni</th>
+
+        </tr>
+        </thead>
+    <tbody>
+        @foreach (BikeShop.Models.Piece p in Model)
+        {
+            <tr>
+                <td>@p.Name</td>
+                <td>
+                    @p.Description
+                    <br />
+                    <br />
+                    @Html.ActionLink("Mai multe detalii", "Details", new { id = p.PieceId })
+                </td>
+                <td>
+                    @Html.ActionLink(linkText: "Modifica informatii", actionName: "Edit", controllerName: "Piece",
+                        routeValues: new { id = p.PieceId }, htmlAttributes: new { @class = "btn btn-primary" })
+                    <br /><br />
+                    <button class="btn-delete btn btn-danger" data-id="@p.PieceId">Sterge</button>
+                    <br />
+                </td>
+            </tr>
+        }
+
+    </tbody>
+
+</table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            var table = $("#pieces").DataTable();
+
+            $("#pieces").on("click", ".btn-delete", function () {
+
+                var btnDelete = $(this);
+                var pieceId = btnDelete.attr("data-id");
+
+                if (confirm("Esti sigur?")) {
+                    $.ajax(
+                        {
+                            url: "/Piece/Delete/" + pieceId,
+                            method: "POST",
+                            success: function () {
+                                console.log("[SUCCESS-delete] pieceId = " + pieceId);
+                                table.row(btnDelete.parents("tr")).remove().draw();
+                            },
+                            error: function () {
+                                console.error("[ERROR-delete] pieceId = " + pieceId);
+                                table.row(btnDelete.parents("tr")).remove().draw();
+                            }
+                        }
+                    );
+                }
+            });
+
+        });
+    </script>
+}
+
+

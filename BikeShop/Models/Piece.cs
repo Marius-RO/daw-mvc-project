@@ -8,11 +8,11 @@ namespace BikeShop.Models
     {
         [Key]
         public int PieceId { get; set; }
-        public float Price { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime FabricationDate { get; set; }
         public int Quantity { get; set; }
+        public float Price { get; set; }
         public Boolean isIndependent { get; set; }
 
         public virtual ICollection<Bike> Bikes { get; set; }
