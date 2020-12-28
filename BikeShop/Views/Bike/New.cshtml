@@ -3,28 +3,88 @@
     ViewBag.Title = "New";
 }
 
-<h2>New</h2>
+<h2>Adauga o noua bicicleta</h2>
 
-<form method="post" action="/Bike/Create">
+@using (Html.BeginForm(actionName: "Create", controllerName: "Bike", method: FormMethod.Post))
+{
+    @Html.ValidationSummary(true, "Au existat erori la validare", new { @class = "text-danger" })
+    <br />
+
+
     @Html.LabelFor(b => b.Name)
     <br />
-    @Html.TextBoxFor(b => b.Name)
+    @Html.TextBoxFor(b => b.Name, null, new { placeholder = "Introdu numele", @class = "form-control" })
+    @Html.ValidationMessageFor(b => b.Name, "", new { @class = "text-danger" })
     <br />
+
+
     @Html.LabelFor(b => b.Description)
     <br />
-    @Html.TextBoxFor(b => b.Description)
+    @Html.TextAreaFor(b => b.Description, new { placeholder = "Introdu descrierea", @class = "form-control" })
+    @Html.ValidationMessageFor(b => b.Description, "", new { @class = "text-danger" })
     <br />
+
 
     @Html.LabelFor(b => b.FabricationDate)
     <br />
-    <input type="date" name="FabricationDate" />
+    @Html.TextBoxFor(model => model.FabricationDate, new { @type = "date", @class = "form-control" })
+    @Html.ValidationMessageFor(b => b.FabricationDate, "", new { @class = "text-danger" })
+    <br />
+
+    @Html.LabelFor(b => b.Quantity)
+    <br />
+    @Html.TextBoxFor(m => m.Quantity, new { type = "number", min = "0", step = "1", @class = "form-control" })
+    @Html.ValidationMessageFor(b => b.Quantity, "", new { @class = "text-danger" })
     <br />
 
     @Html.LabelFor(b => b.Price)
     <br />
-    <input type="number" name="Price" />
+    @Html.TextBoxFor(m => m.Price, new { type = "number", min = "0", step = "0.01" })
+    @Html.ValidationMessageFor(b => b.Price, "", new { @class = "text-danger" })
     <br />
-    <br />
-    <button type="submit">Add bike</button>
 
-</form>
+
+    <br />
+    @Html.LabelFor(b => b.Pieces, "Alege piese continute")
+    <br />
+    <br />
+    <table id="pieces" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Piesa</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.PiecesListCheckBoxes.Count(); i++)
+            {
+                <tr>
+                    <td>
+                        @Html.HiddenFor(b => b.PiecesListCheckBoxes[i].Id)
+                        @Html.HiddenFor(b => b.PiecesListCheckBoxes[i].Name)
+                        @Html.CheckBoxFor(b => b.PiecesListCheckBoxes[i].Checked)
+                        @Html.DisplayFor(b => b.PiecesListCheckBoxes[i].DisplayName)
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+
+
+
+    <br />
+    <button class="btn btn-primary" type="submit">Adauga bicicleta</button>
+
+}
+
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#pieces").DataTable();
+        });
+    </script>
+}

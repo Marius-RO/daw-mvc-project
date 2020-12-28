@@ -3,7 +3,25 @@
     ViewBag.Title = "Details";
 }
 
-<h2>@Model.Name, @Model.Description, @Model.FabricationDate, @Model.Price</h2>
+<h2>Detalii bicicleta @Model.Name</h2>
+
+@Model.Description
+<br />
+@Model.FabricationDate
+<br />
+@Model.Price
+
+<br />
+@Model.Quantity
+
+<br />
+Piese
+@foreach(BikeShop.Models.Piece p in Model.Pieces)
+{
+    @p.Name;<br />
+}
+
+
 
 @Html.ActionLink("Inapoi la biciclete", "Index")
 

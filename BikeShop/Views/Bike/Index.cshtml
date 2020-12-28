@@ -3,14 +3,18 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Biciclete</h2>
+
+@Html.ActionLink("Adauga bicicleta", "New", "Bike", new { @class = "btn btn-primary" })
+<br />
+<br />
 
 <table id="bikes" class="table table-bordered table-hover">
     <thead>
         <tr>
             <th>Name</th>
             <th>Descriere</th>
-            <th>Sterge</th>
+            <th>Actiuni</th>
 
         </tr>
 
@@ -20,16 +24,25 @@
         {
             <tr>
                 <td>@p.Name</td>
-                <td>@Html.ActionLink("Descriere", "Details", new { id = p.BikeId })</td>
-                <td> <button class="btn-delete" data-id="@p.BikeId">Sterge</button></td>
+                <td>
+                    @p.Description
+                    <br />
+                    <br />
+                    @Html.ActionLink("Mai multe detalii", "Details", new { id = p.BikeId })
+                </td>
+                <td>
+                    @Html.ActionLink(linkText: "Modifica informatii", actionName: "Edit", controllerName: "Bike", 
+                        routeValues: new { id = p.BikeId }, htmlAttributes: new { @class = "btn btn-primary" })
+                    <br /><br />
+                    <button class="btn-delete btn btn-danger" data-id="@p.BikeId">Sterge</button>
+                    <br />
+                </td>
             </tr>
         }
 
     </tbody>
 
 </table>
-
-@Html.ActionLink("Adauga bicicleta", "New")
 
 @section scripts
 {
@@ -60,6 +73,7 @@
                     );
                 }
             });
+
         });
     </script>
 }
