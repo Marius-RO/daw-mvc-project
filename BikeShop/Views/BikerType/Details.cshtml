@@ -1,0 +1,56 @@
+﻿@using BikeShop.Config
+@model BikeShop.Models.BikerType
+@{
+    ViewBag.Title = "Details";
+}
+
+<br />
+<br />
+@Html.ActionLink("Inapoi", Utilities.ACTION_INDEX, Utilities.BIKER_TYPE_CONTROLLER, new { @class = "btn btn-primary" })
+<br />
+<br />
+@Html.ActionLink("Editeaza detalii", Utilities.ACTION_EDIT, new { id = @Model.BikerTypeId }, new { @class = "btn btn-primary" })
+<br />
+
+<h2>Detalii @Model.Name</h2>
+
+<hr />
+<h3>Descriere</h3>
+<br />
+<p> @Model.Description </p>
+
+<hr />
+<h3>Biciclete din aceasta categorie</h3>
+
+<div style="width:50%">
+    <table id="bikes" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Nume</th>
+                <th>Categorie bicicleta</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (BikeShop.Models.Bike b in Model.Bikes)
+            {
+                <tr>
+                    <td>@b.Name</td>
+                    <td>@b.BikeCategory.Name</td>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+</div>
+
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#bikes").DataTable();
+        });
+    </script>
+}

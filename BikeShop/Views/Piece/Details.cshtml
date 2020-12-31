@@ -1,0 +1,71 @@
+﻿@using BikeShop.Config
+@model BikeShop.Models.Piece
+@{
+    ViewBag.Title = "Details";
+}
+
+<br />
+<br />
+@Html.ActionLink("Inapoi", Utilities.ACTION_INDEX, Utilities.PIECE_CONTROLLER, new { @class = "btn btn-primary" })
+<br />
+<br />
+@Html.ActionLink("Editeaza detalii", Utilities.ACTION_EDIT, new { id = @Model.PieceId }, new { @class = "btn btn-primary" })
+<br />
+
+<h2>Detalii piesa @Model.Name</h2>
+
+<hr />
+<h3>Descriere</h3>
+@Model.Description
+
+
+<hr />
+<h3>Pentru vanzare</h3>
+@Model.IsIndependent
+
+<hr />
+<h3>Data fabricatie</h3>
+@Model.FabricationDate
+
+<hr />
+<h3>Pret</h3>
+@Model.Price
+
+<hr />
+<h3>Cantitate stoc</h3>
+@Model.Quantity
+
+<hr />
+<h3>Biciclete care contin aceasta piesa</h3>
+
+<div style="width:50%">
+    <table id="bikes" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Nume</th>
+                <th>Categorie bicicleta</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (BikeShop.Models.Bike b in Model.Bikes)
+            {
+                <tr>
+                    <td>@b.Name</td>
+                    <td>@b.BikeCategory.Name</td>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+</div>
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#bikes").DataTable();
+        });
+    </script>
+}

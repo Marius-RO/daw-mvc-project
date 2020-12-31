@@ -1,0 +1,81 @@
+﻿@using BikeShop.Config
+@model List<BikeShop.Models.BikeCategory>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Categorii biciclete</h2>
+
+@Html.ActionLink("Adauga o categorie noua", Utilities.ACTION_NEW, Utilities.BIKE_CATEGORY_CONTROLLER, new { @class = "btn btn-primary" })
+<br />
+<br />
+
+<table id="categories" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Nume</th>
+            <th>Descriere</th>
+            <th>Actiuni</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (BikeShop.Models.BikeCategory p in Model)
+        {
+            <tr>
+                <td>@p.Name</td>
+                <td>
+                    @p.Description
+                    <br />
+                    <br />
+                    @Html.ActionLink("Mai multe detalii", Utilities.ACTION_DETAILS, new { id = p.CategoryId })
+                </td>
+                <td>
+                    @Html.ActionLink("Modifica informatii", Utilities.ACTION_EDIT, new { id = p.CategoryId }, new { @class = "btn btn-primary" })
+                    <br /><br />
+                    <button class="btn-delete btn btn-danger" data-id="@p.CategoryId">Sterge</button>
+                    <br />
+                </td>
+            </tr>
+        }
+
+    </tbody>
+
+</table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            var table = $("#categories").DataTable();
+
+            $("#categories").on("click", ".btn-delete", function () {
+
+                var btnDelete = $(this);
+                var categoryId = btnDelete.attr("data-id");
+
+                if (confirm("Esti sigur?")) {
+                    $.ajax(
+                        {
+                            url: "@Utilities.BIKE_CATEGORY_CONTROLLER/@Utilities.ACTION_DELETE/" + categoryId,
+                            method: "POST",
+                            success: function () {
+                                console.log("[SUCCESS-delete] bikeCategoryId = " + categoryId);
+                                table.row(btnDelete.parents("tr")).remove().draw();
+                            },
+                            error: function () {
+                                console.error("[ERROR-delete] bikeCategoryId = " + categoryId);
+                                table.row(btnDelete.parents("tr")).remove().draw();
+                            }
+                        }
+                    );
+                }
+            });
+
+        });
+    </script>
+}
+
+
+
+

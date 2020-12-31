@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using BikeShop.Config
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -24,8 +25,10 @@
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    <li>@Html.ActionLink("Biciclete", "Index", "Bike")</li>
-                    <li>@Html.ActionLink("Pese", "Index", "Piece")</li>
+                    <li>@Html.ActionLink("Biciclete", Utilities.ACTION_INDEX, Utilities.BIKE_CONTROLLER)</li>
+                    <li>@Html.ActionLink("Piese", Utilities.ACTION_INDEX, Utilities.PIECE_CONTROLLER)</li>
+                    <li>@Html.ActionLink("Tipuri de biciclisti", Utilities.ACTION_INDEX, Utilities.BIKER_TYPE_CONTROLLER)</li>
+                    <li>@Html.ActionLink("Categorii biciclete", Utilities.ACTION_INDEX, Utilities.BIKE_CATEGORY_CONTROLLER)</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

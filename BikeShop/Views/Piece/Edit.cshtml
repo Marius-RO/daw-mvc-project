@@ -4,40 +4,40 @@
     ViewBag.Title = "New";
 }
 
-<h2>Adauga o noua piesa</h2>
+<h2>Editeaza piesa @Model.Name</h2>
 
-@using (Html.BeginForm(actionName: Utilities.ACTION_CREATE, controllerName: Utilities.PIECE_CONTROLLER, method: FormMethod.Post))
+@using (Html.BeginForm(actionName: Utilities.ACTION_UPDATE, controllerName: Utilities.PIECE_CONTROLLER, method: FormMethod.Post))
 {
     @Html.ValidationSummary(true, "Au existat erori la validare", new { @class = "text-danger" })
     <br />
 
     @Html.LabelFor(b => b.Name)
     <br />
-    @Html.TextBoxFor(b => b.Name, null, new { placeholder = "Introdu numele piesei", @class = "form-control" })
+    @Html.TextBoxFor(b => b.Name, null, new { value = Model.Name, @class = "form-control" })
     @Html.ValidationMessageFor(b => b.Name, "", new { @class = "text-danger" })
     <br />
 
     @Html.LabelFor(b => b.Description)
     <br />
-    @Html.TextAreaFor(b => b.Description, new { placeholder = "Introdu descrierea", @class = "form-control" })
+    @Html.TextAreaFor(b => b.Description, new { value = Model.Description, @class = "form-control" })
     @Html.ValidationMessageFor(b => b.Description, "", new { @class = "text-danger" })
     <br />
 
     @Html.LabelFor(b => b.FabricationDate)
     <br />
-    @Html.TextBoxFor(model => model.FabricationDate, new { @type = "date", @class = "form-control" })
+    <input name="FabricationDate" type="date" value="@Model.FabricationDate.ToString("yyyy-MM-dd")" class="form-control" />
     @Html.ValidationMessageFor(b => b.FabricationDate, "", new { @class = "text-danger" })
     <br />
 
     @Html.LabelFor(b => b.Quantity)
     <br />
-    @Html.TextBoxFor(m => m.Quantity, new { type = "number", min = "0", step = "1", @class = "form-control" })
+    @Html.TextBoxFor(m => m.Quantity, new { value = Model.Quantity, type = "number", min = "0", step = "1", @class = "form-control" })
     @Html.ValidationMessageFor(b => b.Quantity, "", new { @class = "text-danger" })
     <br />
 
     @Html.LabelFor(b => b.Price)
     <br />
-    @Html.TextBoxFor(m => m.Price, new { type = "number", min = "0", step = "0.01", @class = "form-control" })
+    @Html.TextBoxFor(m => m.Price, new { value = Model.Price, type = "number", min = "0", step = "0.01", @class = "form-control" })
     @Html.ValidationMessageFor(b => b.Price, "", new { @class = "text-danger" })
     <br />
 
@@ -84,8 +84,10 @@
         </table>
     </div>
 
+    @Html.HiddenFor(b => b.PieceId, new { value = Model.PieceId })
+
     <br />
-    <button class="btn btn-primary" type="submit">Adauga piesa</button>
+    <button class="btn btn-primary" type="submit">Salveaza modificarile</button>
 
 }
 
@@ -93,9 +95,9 @@
 
 @section scripts
 {
-<script>
-    $(document).ready(function () {
-        $("#bikes").DataTable();
-    });
-</script>
+    <script>
+        $(document).ready(function () {
+            $("#bikes").DataTable();
+        });
+    </script>
 }

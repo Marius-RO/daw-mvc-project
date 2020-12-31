@@ -1,11 +1,12 @@
-﻿@model List<BikeShop.Models.Bike>
+﻿@using BikeShop.Config
+@model List<BikeShop.Models.Bike>
 @{
     ViewBag.Title = "Index";
 }
 
 <h2>Biciclete</h2>
 
-@Html.ActionLink("Adauga bicicleta", "New", "Bike", new { @class = "btn btn-primary" })
+@Html.ActionLink("Adauga bicicleta", Utilities.ACTION_NEW, Utilities.BIKE_CONTROLLER, new { @class = "btn btn-primary" })
 <br />
 <br />
 
@@ -13,31 +14,46 @@
     <thead>
         <tr>
             <th>Name</th>
-            <th>Descriere</th>
+            <th>Recomandat pentru</th>
+            <th>Categorie</th>
+            <th>In stoc</th>
+            <th>Cantitate</th>
+            <th>Pret</th>
             <th>Actiuni</th>
-
         </tr>
 
     </thead>
     <tbody>
         @foreach (BikeShop.Models.Bike p in Model)
         {
-            <tr>
-                <td>@p.Name</td>
-                <td>
-                    @p.Description
-                    <br />
-                    <br />
-                    @Html.ActionLink("Mai multe detalii", "Details", new { id = p.BikeId })
-                </td>
-                <td>
-                    @Html.ActionLink(linkText: "Modifica informatii", actionName: "Edit", controllerName: "Bike", 
-                        routeValues: new { id = p.BikeId }, htmlAttributes: new { @class = "btn btn-primary" })
-                    <br /><br />
-                    <button class="btn-delete btn btn-danger" data-id="@p.BikeId">Sterge</button>
-                    <br />
-                </td>
-            </tr>
+        <tr>
+            <td>@p.Name</td>
+            <td>@p.BikerType.Name</td>
+            <td>@p.BikeCategory.Name</td>
+
+            @if (p.Quantity > 0)
+            {
+                <td>Da</td>
+            }
+            else
+            {
+                <td>Nu</td>
+            }
+
+            <td>@p.Quantity</td>
+            <td>@p.Price</td>
+
+            <td>
+                @Html.ActionLink("Mai multe detalii", Utilities.ACTION_DETAILS, new { id = p.BikeId }, new { @class = "btn btn-primary" })
+                <br /><br />
+
+                @Html.ActionLink("Modifica informatii", Utilities.ACTION_EDIT, new { id = p.BikeId }, new { @class = "btn btn-primary" })
+                <br /><br />
+
+                <button class="btn-delete btn btn-danger" data-id="@p.BikeId">Sterge</button>
+                <br />
+            </td>
+        </tr>
         }
 
     </tbody>
@@ -59,7 +75,7 @@
                 if (confirm("Esti sigur?")) {
                     $.ajax(
                         {
-                            url: "/Bike/Delete/" + bikeId,
+                            url: "@Utilities.BIKE_CONTROLLER/@Utilities.ACTION_DELETE/" + bikeId,
                             method: "POST",
                             success: function () {
                                 console.log("[SUCCESS-delete] bikeId = " + bikeId);

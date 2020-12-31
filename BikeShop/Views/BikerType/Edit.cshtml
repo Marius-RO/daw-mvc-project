@@ -1,0 +1,97 @@
+﻿@using BikeShop.Config
+@model BikeShop.Models.BikerType
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Editeaza categoria @Model.Name</h2>
+
+@using (Html.BeginForm(actionName: Utilities.ACTION_UPDATE, controllerName: Utilities.BIKER_TYPE_CONTROLLER, method: FormMethod.Post))
+{
+
+    @Html.ValidationSummary(true, "Au existat erori la validare", new { @class = "text-danger" })
+    <br />
+
+
+    @Html.LabelFor(b => b.Name)
+    <br />
+    @Html.TextBoxFor(b => b.Name, new { value = Model.Name, @class = "form-control" })
+    @Html.ValidationMessageFor(b => b.Name, "", new { @class = "text-danger" })
+    <br />
+
+
+    @Html.LabelFor(b => b.Description)
+    <br />
+    @Html.TextAreaFor(b => b.Description, new { value = Model.Description, @class = "form-control" })
+    @Html.ValidationMessageFor(b => b.Description, "", new { @class = "text-danger" })
+    <br />
+
+    <br />
+    @Html.LabelFor(b => b.Bikes, "Alege biciclete ce apartin categoriei")
+    <br />
+    <br />
+    <div style="width:70%">
+        <table id="bikes" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Selecteaza</th>
+                    <th>Nume</th>
+                    <th>Categorie biciclist curenta</th>
+                    <th>Categorie</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.CheckBoxesList != null)
+                {
+                    for (int i = 0; i < Model.CheckBoxesList.Count(); i++)
+                    {
+                <tr>
+                    <td>
+                        @Html.HiddenFor(b => b.CheckBoxesList[i].Id)
+                        @Html.HiddenFor(b => b.CheckBoxesList[i].Name)
+                        @Html.HiddenFor(b => b.CheckBoxesList[i].DisplayName)
+                        @Html.CheckBoxFor(b => b.CheckBoxesList[i].Checked)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(b => b.CheckBoxesList[i].DisplayName)
+                    </td>
+                    @if (Model.CheckBoxesList[i].Object != null)
+                    {
+                        <td>
+                            @Model.CheckBoxesList[i].Object.BikerType.Name
+                        </td>
+                        <td>
+                            @Model.CheckBoxesList[i].Object.BikeCategory.Name
+                        </td>
+                    }
+                    else
+                    {
+                        <td></td>
+                        <td></td>
+                    }
+                </tr>
+                    }
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+
+
+    @Html.HiddenFor(b => b.BikerTypeId, new { value = Model.BikerTypeId })
+
+    <br />
+    <button type="submit">Salveaza modificarile</button>
+}
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#bikes").DataTable();
+        });
+    </script>
+}
+
+

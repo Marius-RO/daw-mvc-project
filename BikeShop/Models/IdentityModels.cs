@@ -26,6 +26,9 @@ namespace BikeShop.Models
         public DbSet<Accessory> Accessories { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<DeliveryInfo> DeliveryInfos { get; set; }
+        public DbSet<BikerType> BikerTypes { get; set; }
+        public DbSet<BikeCategory> BikeCategories { get; set; }
+
         public object Bike { get; internal set; }
 
         public ApplicationDbContext()

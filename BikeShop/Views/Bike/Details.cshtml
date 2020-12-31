@@ -1,36 +1,92 @@
-﻿@model BikeShop.Models.Bike
+﻿@using BikeShop.Config
+@model BikeShop.Models.Bike
 @{
     ViewBag.Title = "Details";
 }
 
+<br />
+<br />
+@Html.ActionLink("Inapoi", Utilities.ACTION_INDEX, Utilities.BIKE_CONTROLLER, new { @class = "btn btn-primary" })
+<br />
+<br />
+@Html.ActionLink("Editeaza detalii", Utilities.ACTION_EDIT, new { id = @Model.BikeId }, new { @class = "btn btn-primary" })
+<br />
+
 <h2>Detalii bicicleta @Model.Name</h2>
 
+<hr />
+<h3>Descriere</h3>
 @Model.Description
-<br />
+
+<hr />
+<h3>Tip biciclist recomandat</h3>
+@Model.BikerType.Name
+
+
+<hr />
+<h3>Categorie bicicleta</h3>
+@Model.BikeCategory.Name
+
+<hr />
+<h3>Data fabricatie</h3>
 @Model.FabricationDate
-<br />
+
+<hr />
+<h3>Pret</h3>
 @Model.Price
 
-<br />
+<hr />
+<h3>Cantitate stoc</h3>
 @Model.Quantity
 
-<br />
-Piese
-@foreach(BikeShop.Models.Piece p in Model.Pieces)
+<hr />
+<h3>Piese continute</h3>
+<div style="width:50%">
+    <table id="pieces" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Nume</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (BikeShop.Models.Piece p in Model.Pieces)
+            {
+                <tr>
+                    <td>@p.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<hr />
+<h3>Accesorii continute</h3>
+<div style="width:50%">
+    <table id="accesories" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Nume</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (BikeShop.Models.Accessory p in Model.Accessories)
+            {
+                <tr>
+                    <td>@p.Name</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+@section scripts
 {
-    @p.Name;<br />
+    <script>
+        $(document).ready(function () {
+            $("#pieces").DataTable();
+            $("#accesories").DataTable();
+        });
+    </script>
 }
-
-
-
-@Html.ActionLink("Inapoi la biciclete", "Index")
-
-<br />
-
-@Html.ActionLink("Editeaza detalii", "Edit", new { id = @Model.BikeId })
-
-<form method="post" action="/Bike/Delete/@Model.BikeId">
-    <button type="submit">Sterge bicicleta</button>
-</form>
-
-
