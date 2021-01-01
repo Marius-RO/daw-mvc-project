@@ -13,7 +13,6 @@ namespace BikeShop.Models
 
         public virtual ICollection<Bike> Bikes { get; set; }
         public virtual ICollection<Piece> Pieces { get; set; }
-        public virtual ICollection<Accessory> Accessories { get; set; }
 
         [Required]
         public virtual DeliveryInfo DeliveryInfo { get; set; }

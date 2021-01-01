@@ -177,7 +177,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Accessory.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Bike.cs" />
     <Compile Include="Models\BikeCategory.cs" />
@@ -504,6 +503,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Accessory\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

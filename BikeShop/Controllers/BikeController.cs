@@ -43,7 +43,6 @@ namespace BikeShop.Controllers
             bike.BikerTypeList = Utilities.GetAllBikerTypes(ctx);
             bike.BikeCategoryList = Utilities.GetAllBikeCategories(ctx);
             bike.PiecesListCheckBoxes = Utilities.GetAllPiecesCheckBoxes(ctx);
-            bike.AccessoriesListCheckBoxes = Utilities.GetAllAccesoriesCheckBoxes(ctx);
             return View(bike);
         }
 
@@ -77,23 +76,6 @@ namespace BikeShop.Controllers
                     }
                 }
 
-                // add accessories if any
-                List<CheckBoxModel<Accessory>> selectedAccesories = new List<CheckBoxModel<Accessory>>();
-                if (bike.AccessoriesListCheckBoxes != null)
-                {
-                    selectedAccesories = bike.AccessoriesListCheckBoxes.Where(b => b.Checked).ToList();
-                }
-
-                bike.Accessories = new List<Accessory>();
-                for (int i = 0; i < selectedAccesories.Count(); i++)
-                {
-                    Accessory accessory = ctx.Accessories.Find(selectedAccesories[i].Id);
-                    if (accessory != null)
-                    {
-                        bike.Accessories.Add(accessory);
-                    }
-                }
-
                 // add info in db
                 ctx.Bikes.Add(bike);
                 ctx.SaveChanges();
@@ -118,18 +100,11 @@ namespace BikeShop.Controllers
                     bike.BikerTypeList = Utilities.GetAllBikerTypes(ctx);
                     bike.BikeCategoryList = Utilities.GetAllBikeCategories(ctx);
                     bike.PiecesListCheckBoxes = Utilities.GetAllPiecesCheckBoxes(ctx);
-                    bike.AccessoriesListCheckBoxes = Utilities.GetAllAccesoriesCheckBoxes(ctx);
 
                     // mark selected pieces
                     foreach (Piece checkedPiece in bike.Pieces)
                     { 
                         bike.PiecesListCheckBoxes.FirstOrDefault(c => c.Id == checkedPiece.PieceId).Checked = true;
-                    }
-
-                    // mark selected accesories
-                    foreach (Accessory checkedAccessory in bike.Accessories)
-                    {
-                        bike.AccessoriesListCheckBoxes.FirstOrDefault(c => c.Id == checkedAccessory.AccessoryId).Checked = true;
                     }
 
                     return View(bike);
@@ -161,13 +136,6 @@ namespace BikeShop.Controllers
                     selectedPieces = updatedBike.PiecesListCheckBoxes.Where(b => b.Checked).ToList();
                 }
 
-                // get selected accesorries
-                List<CheckBoxModel<Accessory>> selectedAccessories = new List<CheckBoxModel<Accessory>>();
-                if (updatedBike.AccessoriesListCheckBoxes != null)
-                {
-                    selectedAccessories = updatedBike.AccessoriesListCheckBoxes.Where(b => b.Checked).ToList();
-                }
-
                 // update bike
                 Bike bike = ctx.Bikes.Single(b => b.BikeId == updatedBike.BikeId);
                 if (bike == null)
@@ -187,8 +155,6 @@ namespace BikeShop.Controllers
 
                     bike.Pieces.Clear();
                     bike.Pieces = new List<Piece>();
-                    bike.Accessories.Clear();
-                    bike.Accessories = new List<Accessory>();
 
                     // add new pieces if any
                     for (int i = 0; i < selectedPieces.Count(); i++)
@@ -197,16 +163,6 @@ namespace BikeShop.Controllers
                         if (piece != null)
                         {
                             bike.Pieces.Add(piece);
-                        }
-                    }
-
-                    // add new accesorries if any
-                    for (int i = 0; i < selectedAccessories.Count(); i++)
-                    {
-                        Accessory accessory = ctx.Accessories.Find(selectedAccessories[i].Id);
-                        if (accessory != null)
-                        {
-                            bike.Accessories.Add(accessory);
                         }
                     }
 

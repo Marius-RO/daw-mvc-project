@@ -38,23 +38,6 @@ namespace BikeShop.Config
             return checkboxList;
         }
 
-        public static List<CheckBoxModel<Accessory>> GetAllAccesoriesCheckBoxes(ApplicationDbContext ctx)
-        {
-            var checkboxList = new List<CheckBoxModel<Accessory>>();
-            foreach (var accessory in ctx.Accessories.ToList())
-            {
-                checkboxList.Add(new CheckBoxModel<Accessory>
-                {
-                    Id = accessory.AccessoryId,
-                    Name = accessory.Name,
-                    DisplayName = "  " + accessory.Name,
-                    Checked = false,
-                    Object = accessory
-                });
-            }
-            return checkboxList;
-        }
-
         public static List<CheckBoxModel<Bike>> GetAllBikeCheckBoxes(ApplicationDbContext ctx)
         {
             var checkBoxList = new List<CheckBoxModel<Bike>>();

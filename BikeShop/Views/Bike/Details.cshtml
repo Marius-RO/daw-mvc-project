@@ -60,33 +60,12 @@
 </div>
 
 
-<hr />
-<h3>Accesorii continute</h3>
-<div style="width:50%">
-    <table id="accesories" class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>Nume</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (BikeShop.Models.Accessory p in Model.Accessories)
-            {
-                <tr>
-                    <td>@p.Name</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
-
 
 @section scripts
 {
     <script>
         $(document).ready(function () {
             $("#pieces").DataTable();
-            $("#accesories").DataTable();
         });
     </script>
 }

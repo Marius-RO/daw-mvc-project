@@ -55,15 +55,11 @@ namespace BikeShop.Models
         // many-to-many
         public virtual ICollection<Piece> Pieces { get; set; }
         // many-to-many
-        public virtual ICollection<Accessory> Accessories { get; set; }
-        // many-to-many
         public virtual ICollection<Order> Orders { get; set; }
 
         // used in views
         [NotMapped]
         public List<CheckBoxModel<Piece>> PiecesListCheckBoxes { get; set; }
-        [NotMapped]
-        public List<CheckBoxModel<Accessory>> AccessoriesListCheckBoxes { get; set; }
         [NotMapped]
         public IEnumerable<SelectListItem> BikerTypeList { get; set; }
         [NotMapped]

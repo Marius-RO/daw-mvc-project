@@ -98,26 +98,6 @@
     </div>
 
 
-    <br />
-    @Html.LabelFor(b => b.Pieces, "Alege accesorii continute")
-    <br />
-    <br />
-
-    <div style="width:50%">
-        <table id="accesories" class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th>Selecteaza</th>
-                    <th>Nume</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-
-        </table>
-    </div>
-
-
     @Html.HiddenFor(b => b.BikeId, new { value = Model.BikeId })
 
     <button type="submit">Salveaza modificarile</button>
@@ -129,7 +109,6 @@
         $(document).ready(function () {
             console.log(@Model.FabricationDate.ToString("MM/dd/yyyy"));
             $("#pieces").DataTable();
-            $("#accesories").DataTable();
         });
     </script>
 }
