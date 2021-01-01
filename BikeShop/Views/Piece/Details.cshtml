@@ -20,8 +20,27 @@
 
 
 <hr />
+<h3>Accesoriu</h3>
+@if (@Model.IsAccessory)
+{
+    <p>Da</p>
+}
+else
+{
+    <p>Nu</p>
+}
+
+<hr />
 <h3>Pentru vanzare</h3>
-@Model.IsIndependent
+@if (@Model.IsIndependent)
+{
+    <p>Da</p>
+}
+else
+{
+    <p>Nu</p>
+}
+
 
 <hr />
 <h3>Data fabricatie</h3>

@@ -37,6 +37,10 @@ namespace BikeShop.Models
         [Required(ErrorMessage = "Selecteaza daca piesa este pentru vanzare sau nu")]
         public bool IsIndependent { get; set; }
 
+        [Display(Name = "Accesoriu")]
+        [Required(ErrorMessage = "Alege daca este accesoriu")]
+        public bool IsAccessory { get; set; }
+
         // many-to-many
         public virtual ICollection<Bike> Bikes { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
@@ -48,6 +52,8 @@ namespace BikeShop.Models
         // used in views
         [NotMapped]
         public IEnumerable<SelectListItem> SellingOptionList { get; set; }
+        [NotMapped]
+        public IEnumerable<SelectListItem> AccessoryOptionList { get; set; }
         [NotMapped]
         public List<CheckBoxModel<Bike>> BikeCheckBoxesList { get; set; }
     }

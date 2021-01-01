@@ -15,6 +15,7 @@
     <thead>
         <tr>
             <th>Name</th>
+            <th>Accesoriu</th>
             <th>In stoc</th>
             <th>Cantitate</th>
             <th>Pret</th>
@@ -25,32 +26,41 @@
     <tbody>
         @foreach (BikeShop.Models.Piece p in Model)
         {
-            <tr>
-                <td>@p.Name</td>
+        <tr>
+            <td>@p.Name</td>
 
-                @if (p.Quantity > 0)
-                {
-                    <td>Da</td>
-                }
-                else
-                {
-                    <td>Nu</td>
-                }
+            @if (p.IsAccessory)
+            {
+                <td>Da</td>
+            }
+            else
+            {
+                <td>Nu</td>
+            }
 
-                <td>@p.Quantity</td>
-                <td>@p.Price</td>
+            @if (p.Quantity > 0)
+            {
+                <td>Da</td>
+            }
+            else
+            {
+                <td>Nu</td>
+            }
 
-                <td>
-                    @Html.ActionLink("Mai multe detalii", Utilities.ACTION_DETAILS, new { id = p.PieceId }, new { @class = "btn btn-primary" })
-                    <br /><br />
+            <td>@p.Quantity</td>
+            <td>@p.Price</td>
 
-                    @Html.ActionLink("Modifica informatii", Utilities.ACTION_EDIT, new { id = p.PieceId }, new { @class = "btn btn-primary" })
-                    <br /><br />
+            <td>
+                @Html.ActionLink("Mai multe detalii", Utilities.ACTION_DETAILS, new { id = p.PieceId }, new { @class = "btn btn-primary" })
+                <br /><br />
 
-                    <button class="btn-delete btn btn-danger" data-id="@p.PieceId">Sterge</button>
-                    <br />
-                </td>
-            </tr>
+                @Html.ActionLink("Modifica informatii", Utilities.ACTION_EDIT, new { id = p.PieceId }, new { @class = "btn btn-primary" })
+                <br /><br />
+
+                <button class="btn-delete btn btn-danger" data-id="@p.PieceId">Sterge</button>
+                <br />
+            </td>
+        </tr>
         }
 
     </tbody>

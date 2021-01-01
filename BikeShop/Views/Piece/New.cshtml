@@ -41,6 +41,13 @@
     @Html.ValidationMessageFor(b => b.Price, "", new { @class = "text-danger" })
     <br />
 
+    @Html.LabelFor(b => b.IsAccessory)
+    <br />
+    @Html.DropDownListFor(b => b.IsAccessory, new SelectList(Model.AccessoryOptionList, "Value", "Text"), new { @class = "form-control" })
+    @Html.ValidationMessageFor(b => b.IsAccessory, "", new { @class = "text-danger" })
+    <br />
+    <br />
+
     @Html.LabelFor(b => b.IsIndependent)
     <br />
     @Html.DropDownListFor(b => b.IsIndependent, new SelectList(Model.SellingOptionList, "Value", "Text"), new { @class = "form-control" })
@@ -93,9 +100,9 @@
 
 @section scripts
 {
-<script>
-    $(document).ready(function () {
-        $("#bikes").DataTable();
-    });
-</script>
+    <script>
+        $(document).ready(function () {
+            $("#bikes").DataTable();
+        });
+    </script>
 }

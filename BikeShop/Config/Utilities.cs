@@ -83,7 +83,7 @@ namespace BikeShop.Config
             return selectList;
         }
 
-        public static IEnumerable<SelectListItem> GetSellingOptions()
+        public static IEnumerable<SelectListItem> GetBasicOptions()
         {
             var selectList = new List<SelectListItem>();
             selectList.Add(new SelectListItem

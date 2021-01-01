@@ -40,7 +40,8 @@ namespace BikeShop.Controllers
         public ActionResult New()
         {
             Piece piece = new Piece();
-            piece.SellingOptionList = Utilities.GetSellingOptions();
+            piece.SellingOptionList = Utilities.GetBasicOptions();
+            piece.AccessoryOptionList = Utilities.GetBasicOptions();
             piece.BikeCheckBoxesList = Utilities.GetAllBikeCheckBoxes(ctx);
             return View(piece);
         }
@@ -53,7 +54,8 @@ namespace BikeShop.Controllers
                 if (!ModelState.IsValid)
                 {
                     // reload select item list
-                    piece.SellingOptionList = Utilities.GetSellingOptions();
+                    piece.SellingOptionList = Utilities.GetBasicOptions();
+                    piece.AccessoryOptionList = Utilities.GetBasicOptions();
                     return View("New", piece);
                 }
 
@@ -95,7 +97,8 @@ namespace BikeShop.Controllers
                 if (piece != null)
                 {
                     // reload select item lists and check boxes lists
-                    piece.SellingOptionList = Utilities.GetSellingOptions();
+                    piece.SellingOptionList = Utilities.GetBasicOptions();
+                    piece.AccessoryOptionList = Utilities.GetBasicOptions();
                     piece.BikeCheckBoxesList = Utilities.GetAllBikeCheckBoxes(ctx);
 
                     // mark selected dropdown items       
@@ -125,7 +128,8 @@ namespace BikeShop.Controllers
                 if (!ModelState.IsValid)
                 {
                     // reload select item list
-                    updatedPiece.SellingOptionList = Utilities.GetSellingOptions();
+                    updatedPiece.SellingOptionList = Utilities.GetBasicOptions();
+                    updatedPiece.AccessoryOptionList = Utilities.GetBasicOptions();
                     return View("Edit", updatedPiece);
                 }
 
