@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace BikeShop.Models.Validari
+namespace BikeShop.Models.Validations
 {
     public class SellerValidation : ValidationAttribute
     {

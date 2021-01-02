@@ -1,4 +1,4 @@
-﻿using BikeShop.Models.Validari;
+﻿using BikeShop.Models.Validations;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
