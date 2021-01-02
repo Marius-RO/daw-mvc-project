@@ -1,0 +1,113 @@
+﻿@using BikeShop.Config
+@model BikeShop.Models.Order
+@{
+    ViewBag.Title = "Details";
+}
+
+<br />
+<br />
+@Html.ActionLink("Inapoi", Utilities.ACTION_INDEX, Utilities.ORDER_CONTROLLER, new { @class = "btn btn-primary" })
+<br />
+<br />
+@Html.ActionLink("Editeaza detalii", Utilities.ACTION_EDIT, new { id = @Model.OrderId }, new { @class = "btn btn-primary" })
+<br />
+
+<h2>Detalii comanda @Model.OrderId</h2>
+
+<hr />
+<h3>Nume client</h3>
+@Model.DeliveryInfo.Name
+
+<hr />
+<h3>CNP</h3>
+@Model.DeliveryInfo.CNP
+
+<hr />
+<h3>Numar de telefon</h3>
+@Model.DeliveryInfo.PhoneNumber
+
+
+<hr />
+<h3>Adresa de livrare</h3>
+@Model.DeliveryInfo.Address
+
+
+<hr />
+<h3>Vanzator</h3>
+@Model.SellerId
+
+<hr />
+<h3>Data creare</h3>
+@Model.OrderDate
+
+<hr />
+<h3>Total</h3>
+@Model.OrderValue
+
+<hr />
+<h3>Bciclete continute</h3>
+<div style="width:80%">
+    <table id="bikes" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Nume</th>
+                <th>Cantitate</th>
+                <th>Pret</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (BikeShop.Models.Bike p in Model.Bikes)
+            {
+                <tr>
+                    <td>@p.Name</td>
+                </tr>
+                <tr>
+                    <td>@p.Quantity</td>
+                </tr>
+                <tr>
+                    <td>@p.Price</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<hr />
+<h3>Piese continute</h3>
+<div style="width:80%">
+    <table id="pieces" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Nume</th>
+                <th>Cantitate</th>
+                <th>Pret</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (BikeShop.Models.Piece p in Model.Pieces)
+            {
+                <tr>
+                    <td>@p.Name</td>
+                </tr>
+                <tr>
+                    <td>@p.Quantity</td>
+                </tr>
+                <tr>
+                    <td>@p.Price</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#bikes").DataTable();
+            $("#pieces").DataTable();
+        });
+    </script>
+}

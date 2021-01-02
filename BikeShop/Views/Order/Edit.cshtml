@@ -1,0 +1,218 @@
+﻿@using BikeShop.Config
+@model BikeShop.Models.Order
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Editeaza comanda @Model.OrderId</h2>
+
+
+@using (Html.BeginForm(actionName: Utilities.ACTION_UPDATE, controllerName: Utilities.ORDER_CONTROLLER))
+{
+    @Html.HttpMethodOverride(HttpVerbs.Put)
+
+    @Html.ValidationSummary(true, "Au existat erori la validare", new { @class = "text-danger" })
+    <br />
+
+    @Html.LabelFor(b => b.DeliveryInfo.Name)
+    <br />
+    @Html.TextBoxFor(b => b.DeliveryInfo.Name, new { placeholder = "Introdu numele", @class = "form-control" })
+    @Html.ValidationMessageFor(b => b.DeliveryInfo.Name, "", new { @class = "text-danger" })
+    <br />
+
+    @Html.LabelFor(b => b.DeliveryInfo.CNP)
+    <br />
+    @Html.TextBoxFor(b => b.DeliveryInfo.CNP, new { placeholder = "Introdu CNP", @class = "form-control" })
+    @Html.ValidationMessageFor(b => b.DeliveryInfo.CNP, "", new { @class = "text-danger" })
+    <br />
+
+
+    @Html.LabelFor(b => b.DeliveryInfo.PhoneNumber)
+    <br />
+    @Html.TextBoxFor(b => b.DeliveryInfo.PhoneNumber, new { placeholder = "Introdu numarul de telefon", @class = "form-control" })
+    @Html.ValidationMessageFor(b => b.DeliveryInfo.PhoneNumber, "", new { @class = "text-danger" })
+    <br />
+
+
+    @Html.LabelFor(b => b.DeliveryInfo.Address)
+    <br />
+    @Html.TextAreaFor(b => b.DeliveryInfo.Address, new { placeholder = "Introdu adresa de livrare", @class = "form-control" })
+    @Html.ValidationMessageFor(b => b.DeliveryInfo.Address, "", new { @class = "text-danger" })
+    <br />
+
+    <br />
+    @Html.LabelFor(b => b.BikesListCheckBoxes, "Alege biciclete")
+    <br />
+    @Html.ValidationMessageFor(b => b.BikesListCheckBoxes, "", new { @class = "text-danger" })
+    <br />
+    <br />
+
+    <div style="width:100%">
+        <table id="bikes" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Selecteaza</th>
+                    <th>Nume</th>
+                    <th>Pret</th>
+                    <th>In stoc</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.BikesListCheckBoxes != null)
+                {
+                    for (int i = 0; i < Model.BikesListCheckBoxes.Count(); i++)
+                    {
+                        <tr>
+                            <td>
+                                @Html.HiddenFor(b => b.BikesListCheckBoxes[i].Id)
+                                @Html.HiddenFor(b => b.BikesListCheckBoxes[i].Name)
+                                @Html.HiddenFor(b => b.BikesListCheckBoxes[i].DisplayName)
+
+                                @if (Model.BikesListCheckBoxes[i].Object != null && Model.BikesListCheckBoxes[i].Object.Quantity > 0)
+                                {
+                                    @Html.CheckBoxFor(b => b.BikesListCheckBoxes[i].Checked)
+                                }
+
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(b => b.BikesListCheckBoxes[i].DisplayName)
+
+                                @if (Model.BikesListCheckBoxes[i].Object != null)
+                                {
+                                    <br />
+                                    @Html.ActionLink("Mai multe detalii", Utilities.ACTION_DETAILS, Utilities.BIKE_CONTROLLER,
+                                   new { id = Model.BikesListCheckBoxes[i].Object.BikeId })
+                                }
+                            </td>
+
+                            @if (Model.BikesListCheckBoxes[i].Object != null)
+                            {
+                                <td>@Model.BikesListCheckBoxes[i].Object.Price</td>
+
+                                if (Model.BikesListCheckBoxes[i].Object.Quantity > 0)
+                                {
+                                    <td>Da</td>
+                                }
+                                else
+                                {
+                                    <td>Nu</td>
+                                }
+                            }
+                            else
+                            {
+                                <td></td>
+                                <td></td>
+                            }
+
+                        </tr>
+                    }
+
+                }
+            </tbody>
+
+        </table>
+    </div>
+
+    <br />
+    @Html.LabelFor(b => b.PiecesListCheckBoxes, "Alege piese")
+    <br />
+    @Html.ValidationMessageFor(b => b.PiecesListCheckBoxes, "", new { @class = "text-danger" })
+    <br />
+    <br />
+
+    <div style="width:100%">
+        <table id="pieces" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>Selecteaza</th>
+                    <th>Nume</th>
+                    <th>Pret</th>
+                    <th>In stoc</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.PiecesListCheckBoxes != null)
+                {
+                    for (int i = 0; i < Model.PiecesListCheckBoxes.Count(); i++)
+                    {
+                        <tr>
+
+                            <td>
+                                @Html.HiddenFor(b => b.PiecesListCheckBoxes[i].Id)
+                                @Html.HiddenFor(b => b.PiecesListCheckBoxes[i].Name)
+                                @Html.HiddenFor(b => b.PiecesListCheckBoxes[i].DisplayName)
+
+                                @if (Model.PiecesListCheckBoxes[i].Object != null && Model.PiecesListCheckBoxes[i].Object.Quantity > 0)
+                                {
+                                    @Html.CheckBoxFor(b => b.PiecesListCheckBoxes[i].Checked)
+                                }
+                            </td>
+
+                            <td>
+                                @Html.DisplayFor(b => b.PiecesListCheckBoxes[i].DisplayName)
+                                @if (Model.PiecesListCheckBoxes[i].Object != null)
+                                {
+                                    @Html.ActionLink("Mai multe detalii", Utilities.ACTION_DETAILS, Utilities.PIECE_CONTROLLER,
+                                        new { id = Model.PiecesListCheckBoxes[i].Object.PieceId })
+                                }
+                                <br />
+
+                            </td>
+
+                            @if (Model.PiecesListCheckBoxes[i].Object != null)
+                            {
+                                <td>@Model.PiecesListCheckBoxes[i].Object.Price</td>
+
+                                if (Model.PiecesListCheckBoxes[i].Object.Quantity > 0)
+                                {
+                                    <td>Da</td>
+                                }
+                                else
+                                {
+                                    <td>Nu</td>
+                                }
+                            }
+                            else
+                            {
+                                <td></td>
+                                <td></td>
+                            }
+
+                        </tr>
+                    }
+
+                }
+            </tbody>
+
+        </table>
+    </div>
+
+
+
+    @Html.HiddenFor(b => b.SellerId, new { @Value = 0 })
+    @Html.ValidationMessageFor(b => b.SellerId, "", new { @class = "text-danger" })
+
+    @Html.HiddenFor(b => b.OrderDate, new { @Value = Model.OrderDate })
+    @Html.ValidationMessageFor(b => b.OrderDate, "", new { @class = "text-danger" })
+
+
+    @Html.HiddenFor(b => b.OrderValue, new { @Value = 0.0 })
+    @Html.ValidationMessageFor(b => b.OrderValue, "", new { @class = "text-danger" })
+
+
+
+    @Html.HiddenFor(b => b.OrderId, new { @Value = Model.OrderId })
+
+    <button type="submit">Salveaza modificarile</button>
+}
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#bikes").DataTable();
+            $("#pieces").DataTable();
+        });
+    </script>
+}

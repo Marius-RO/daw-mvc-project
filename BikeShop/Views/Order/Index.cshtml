@@ -1,0 +1,80 @@
+﻿@using BikeShop.Config
+@model List<BikeShop.Models.Order>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Comenzi</h2>
+
+@Html.ActionLink("Adauga comanda", Utilities.ACTION_NEW, Utilities.ORDER_CONTROLLER, new { @class = "btn btn-primary" })
+<br />
+<br />
+
+<table id="orders" class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Nr. comanda</th>
+            <th>Data</th>
+            <th>Total</th>
+            <th>Actiuni</th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (BikeShop.Models.Order p in Model)
+        {
+            <tr>
+                <td>@p.OrderId</td>
+                <td>@p.OrderDate</td>
+                <td>@p.OrderValue</td>
+                <td>
+                    @Html.ActionLink("Mai multe detalii", Utilities.ACTION_DETAILS, new { id = p.OrderId }, new { @class = "btn btn-primary" })
+                    <br /><br />
+
+                    @Html.ActionLink("Modifica informatii", Utilities.ACTION_EDIT, new { id = p.OrderId }, new { @class = "btn btn-primary" })
+                    <br /><br />
+
+                    <button class="btn-delete btn btn-danger" data-id="@p.OrderId">Sterge</button>
+                    <br />
+                </td>
+            </tr>
+        }
+
+    </tbody>
+
+</table>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+
+            var table = $("#orders").DataTable();
+
+            $("#orders").on("click", ".btn-delete", function () {
+
+                var btnDelete = $(this);
+                var orderId = btnDelete.attr("data-id");
+
+                if (confirm("Esti sigur?")) {
+                    $.ajax(
+                        {
+                            url: "@Utilities.ORDER_CONTROLLER/@Utilities.ACTION_DELETE/" + orderId,
+                            method: "POST",
+                            success: function () {
+                                console.log("[SUCCESS-delete] orderId = " + orderId);
+                                table.row(btnDelete.parents("tr")).remove().draw();
+                            },
+                            error: function () {
+                                console.error("[ERROR-delete] orderId = " + orderId);
+                            }
+                        }
+                    );
+                }
+            });
+
+        });
+    </script>
+}
+
+

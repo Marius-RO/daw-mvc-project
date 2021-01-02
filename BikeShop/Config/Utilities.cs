@@ -13,6 +13,7 @@ namespace BikeShop.Config
         public static readonly string PIECE_CONTROLLER = "Piece";
         public static readonly string BIKER_TYPE_CONTROLLER = "BikerType";
         public static readonly string BIKE_CATEGORY_CONTROLLER = "BikeCategory";
+        public static readonly string ORDER_CONTROLLER = "Order";
         public static readonly string ACTION_INDEX = "Index";
         public static readonly string ACTION_DETAILS = "Details";
         public static readonly string ACTION_NEW = "New";
