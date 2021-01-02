@@ -12,12 +12,14 @@ namespace BikeShop.Controllers
     {
         private ApplicationDbContext ctx = new ApplicationDbContext();
 
+        [HttpGet]
         public ActionResult Index()
         {
             List<Order> orders = ctx.Orders.ToList();
             return View(orders);
         }
 
+        [HttpGet]
         public ActionResult Details(int? id)
         {
             if (id.HasValue)
@@ -35,7 +37,7 @@ namespace BikeShop.Controllers
 
         }
 
-
+        [HttpGet]
         public ActionResult New()
         {
             Order order = new Order();
@@ -107,6 +109,7 @@ namespace BikeShop.Controllers
             }
         }
 
+        [HttpGet]
         public ActionResult Edit(int? id)
         {
             if (id.HasValue)

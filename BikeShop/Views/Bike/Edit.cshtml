@@ -7,8 +7,10 @@
 <h2>Editeaza bicicleta @Model.Name</h2>
 
 
-@using (Html.BeginForm(actionName: Utilities.ACTION_UPDATE, controllerName: Utilities.BIKE_CONTROLLER, method: FormMethod.Post))
+@using (Html.BeginForm(actionName: Utilities.ACTION_UPDATE, controllerName: Utilities.BIKE_CONTROLLER))
 {
+    @Html.HttpMethodOverride(HttpVerbs.Put)
+
     @Html.ValidationSummary(true, "Au existat erori la validare", new { @class = "text-danger" })
     <br />
 
@@ -97,7 +99,6 @@
         </table>
     </div>
 
-
     @Html.HiddenFor(b => b.BikeId, new { value = Model.BikeId })
 
     <button type="submit">Salveaza modificarile</button>
@@ -107,7 +108,6 @@
 {
     <script>
         $(document).ready(function () {
-            console.log(@Model.FabricationDate.ToString("MM/dd/yyyy"));
             $("#pieces").DataTable();
         });
     </script>

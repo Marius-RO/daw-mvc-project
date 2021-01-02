@@ -12,12 +12,14 @@ namespace BikeShop.Controllers
     {
         private ApplicationDbContext ctx = new ApplicationDbContext();
 
+        [HttpGet]
         public ActionResult Index()
         {
             List<Bike> bikes = ctx.Bikes.ToList();
             return View(bikes);
         }
 
+        [HttpGet]
         public ActionResult Details(int? id)
         {
             if (id.HasValue)
@@ -36,7 +38,7 @@ namespace BikeShop.Controllers
 
         }
 
-
+        [HttpGet]
         public ActionResult New()
         {
             Bike bike = new Bike();
@@ -85,10 +87,11 @@ namespace BikeShop.Controllers
             {
                 var msg = e.Message;
                 Console.WriteLine(e.Message);
-                return View(bike);
+                return View("New", bike);
             }
         }
 
+        [HttpGet]
         public ActionResult Edit(int? id)
         {
             if (id.HasValue)
@@ -116,7 +119,7 @@ namespace BikeShop.Controllers
             return HttpNotFound("Lipseste parametrul id!");
         }
 
-        [HttpPost]
+        [HttpPut]
         public ActionResult Update(Bike updatedBike)
         {
             try
@@ -178,7 +181,7 @@ namespace BikeShop.Controllers
             {
                 var msg = e.Message;
                 Console.WriteLine(e.Message);
-                return RedirectToAction("Index");
+                return View("Edit", updatedBike);
             }
 
         }

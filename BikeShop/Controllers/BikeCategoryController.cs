@@ -83,10 +83,11 @@ namespace BikeShop.Controllers
             {
                 var msg = e.Message;
                 Console.WriteLine(e.Message);
-                return View(category);
+                return View("New", category);
             }
         }
 
+        [HttpGet]
         public ActionResult Edit(int? id)
         {
             if (id.HasValue)
@@ -110,7 +111,7 @@ namespace BikeShop.Controllers
             return HttpNotFound("Lipseste parametrul id!");
         }
 
-        [HttpPost]
+        [HttpPut]
         public ActionResult Update(BikeCategory updatedCategory)
         {
             try
@@ -175,7 +176,7 @@ namespace BikeShop.Controllers
             {
                 var msg = e.Message;
                 Console.WriteLine(e.Message);
-                return RedirectToAction("Index");
+                return View("Edit", updatedCategory);
             }
         }
 

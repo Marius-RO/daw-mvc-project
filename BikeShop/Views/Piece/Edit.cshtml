@@ -6,8 +6,10 @@
 
 <h2>Editeaza piesa @Model.Name</h2>
 
-@using (Html.BeginForm(actionName: Utilities.ACTION_UPDATE, controllerName: Utilities.PIECE_CONTROLLER, method: FormMethod.Post))
+@using (Html.BeginForm(actionName: Utilities.ACTION_UPDATE, controllerName: Utilities.PIECE_CONTROLLER))
 {
+    @Html.HttpMethodOverride(HttpVerbs.Put)
+
     @Html.ValidationSummary(true, "Au existat erori la validare", new { @class = "text-danger" })
     <br />
 

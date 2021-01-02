@@ -12,12 +12,14 @@ namespace BikeShop.Controllers
     {
         private ApplicationDbContext ctx = new ApplicationDbContext();
 
+        [HttpGet]
         public ActionResult Index()
         {
             List<Piece> pieces = ctx.Pieces.ToList();
             return View(pieces);
         }
 
+        [HttpGet]
         public ActionResult Details(int? id)
         {
             if (id.HasValue)
@@ -36,7 +38,7 @@ namespace BikeShop.Controllers
 
         }
 
-
+        [HttpGet]
         public ActionResult New()
         {
             Piece piece = new Piece();
@@ -85,10 +87,11 @@ namespace BikeShop.Controllers
             {
                 var msg = e.Message;
                 Console.WriteLine(e.Message);
-                return View(piece);
+                return View("New", piece);
             }
         }
 
+        [HttpGet]
         public ActionResult Edit(int? id)
         {
             if (id.HasValue)
@@ -100,9 +103,6 @@ namespace BikeShop.Controllers
                     piece.SellingOptionList = Utilities.GetBasicOptions();
                     piece.AccessoryOptionList = Utilities.GetBasicOptions();
                     piece.BikeCheckBoxesList = Utilities.GetAllBikeCheckBoxes(ctx);
-
-                    // mark selected dropdown items       
-
 
                     // mark selected bikes
                     piece.BikeCheckBoxesList = Utilities.GetAllBikeCheckBoxes(ctx);
@@ -120,7 +120,7 @@ namespace BikeShop.Controllers
             return HttpNotFound("Lipseste parametrul id!");
         }
 
-        [HttpPost]
+        [HttpPut]
         public ActionResult Update(Piece updatedPiece)
         {
             try
@@ -181,7 +181,7 @@ namespace BikeShop.Controllers
             {
                 var msg = e.Message;
                 Console.WriteLine(e.Message);
-                return RedirectToAction("Index");
+                return View("Edit", updatedPiece);
             }
 
         }
