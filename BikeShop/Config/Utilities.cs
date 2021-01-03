@@ -22,6 +22,10 @@ namespace BikeShop.Config
         public static readonly string ACTION_UPDATE = "Update";
         public static readonly string ACTION_DELETE = "Delete";
 
+        public static readonly string ROLE_ADMIN = "Admin";
+        public static readonly string ROLE_SELLER = "Seller";
+        public static readonly string ROLE_CLIENT = "Client";
+
         public static List<CheckBoxModel<Piece>> GetAllPiecesCheckBoxes(ApplicationDbContext ctx)
         {
             var checkboxList = new List<CheckBoxModel<Piece>>();

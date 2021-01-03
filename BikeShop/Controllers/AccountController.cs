@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using BikeShop.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
+using BikeShop.Config;
 
 namespace BikeShop.Controllers
 {
@@ -156,13 +157,15 @@ namespace BikeShop.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-
+                    /* // Client role is added in startup.cs
                     var roleStore = new RoleStore<IdentityRole>(new ApplicationDbContext());
                     var roleManager = new RoleManager<IdentityRole>(roleStore);
+                     
+                    if (!roleManager.RoleExists(Utilities.ROLE_CLIENT))
+                        roleManager.Create(new IdentityRole(Utilities.ROLE_CLIENT));
+                    */
 
-                    if (!roleManager.RoleExists("User"))
-                        roleManager.Create(new IdentityRole("User"));
-                    UserManager.AddToRole(user.Id, "User");
+                    UserManager.AddToRole(user.Id, Utilities.ROLE_CLIENT);
 
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
                     

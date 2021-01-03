@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using BikeShop.Models.Validations;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace BikeShop.Models
@@ -65,7 +66,7 @@ namespace BikeShop.Models
     public class RegisterViewModel
     {
         [Required]
-        [EmailAddress]
+        [CustomEmailValidation]
         [Display(Name = "Email")]
         public string Email { get; set; }
 

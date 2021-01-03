@@ -27,9 +27,6 @@ namespace BikeShop.Models
         public DbSet<DeliveryInfo> DeliveryInfos { get; set; }
         public DbSet<BikerType> BikerTypes { get; set; }
         public DbSet<BikeCategory> BikeCategories { get; set; }
-
-        public object Bike { get; internal set; }
-
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
         {
