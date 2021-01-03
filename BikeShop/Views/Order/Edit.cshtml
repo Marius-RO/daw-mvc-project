@@ -182,21 +182,10 @@
     </div>
 
 
-
-    @Html.HiddenFor(b => b.SellerId, new { @Value = "0" })
-    @Html.ValidationMessageFor(b => b.SellerId, "", new { @class = "text-danger" })
-
-    @Html.HiddenFor(b => b.OrderDate, new { @Value = Model.OrderDate })
-    @Html.ValidationMessageFor(b => b.OrderDate, "", new { @class = "text-danger" })
-
-
-    @Html.HiddenFor(b => b.OrderValue, new { @Value = 0.0 })
-    @Html.ValidationMessageFor(b => b.OrderValue, "", new { @class = "text-danger" })
-
-
-
+    @Html.HiddenFor(b => b.SellerId)
+    @Html.HiddenFor(b => b.OrderDate)
+    @Html.HiddenFor(b => b.OrderValue)
     @Html.HiddenFor(b => b.OrderId, new { @Value = Model.OrderId })
-
     @Html.HiddenFor(b => b.UserId)
 
     <button type="submit">Salveaza modificarile</button>

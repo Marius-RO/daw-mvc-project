@@ -66,6 +66,7 @@ namespace BikeShop.Controllers
             Piece piece = new Piece();
             piece.UserId = User.Identity.GetUserId();
             piece.SellingOptionList = Utilities.GetBasicOptions();
+            piece.AccessoryOptionList = Utilities.GetBasicOptions();
             piece.BikeCheckBoxesList = Utilities.GetAllBikeCheckBoxes(ctx, userId: piece.UserId);
             return View(piece);
         }

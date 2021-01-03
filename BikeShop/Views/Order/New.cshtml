@@ -180,18 +180,11 @@
     </div>
 
 
-    @Html.HiddenFor(b => b.SellerId, new { @Value = "0" })
-    @Html.ValidationMessageFor(b => b.SellerId, "", new { @class = "text-danger" })
-
-
-    @Html.HiddenFor(b => b.OrderDate, new { @Value = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss") })
-    @Html.ValidationMessageFor(b => b.OrderDate, "", new { @class = "text-danger" })
-
-
-    @Html.HiddenFor(b => b.OrderValue, new { @Value = 0 })
-    @Html.ValidationMessageFor(b => b.OrderValue, "", new { @class = "text-danger" })
-
     @Html.HiddenFor(b => b.UserId)
+    @Html.HiddenFor(b => b.OrderValue, new { @Value = 1.0 })
+    @Html.HiddenFor(b => b.OrderDate, new { @Value = "yyyy-mm-dd" })
+    @Html.HiddenFor(b => b.SellerId, new { @Value = "default-id" })
+
     <br />
     <button class="btn btn-primary" type="submit">Trimite comanda</button>
 

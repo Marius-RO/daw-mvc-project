@@ -6,7 +6,7 @@ using System.Web;
 
 namespace BikeShop.Models.Validations
 {
-    public class BikeSellerValidation : ValidationAttribute
+    public class PieceSellerValidation : ValidationAttribute
     {
         private ApplicationDbContext ctx = new ApplicationDbContext();
 
@@ -14,23 +14,23 @@ namespace BikeShop.Models.Validations
         {
             Order order = (Order)validationContext.ObjectInstance;
 
-            List<CheckBoxModel<Bike>> selectedBikes = new List<CheckBoxModel<Bike>>();
-            if (order.BikesListCheckBoxes != null)
+            List<CheckBoxModel<Piece>> selectedPieces = new List<CheckBoxModel<Piece>>();
+            if (order.PiecesListCheckBoxes != null)
             {
-                selectedBikes = order.BikesListCheckBoxes.Where(b => b.Checked).ToList();
+                selectedPieces = order.PiecesListCheckBoxes.Where(b => b.Checked).ToList();
             }
 
             // check if selected bikes (if any) are from the same seller
             HashSet<string> sellers = new HashSet<string>();
-            for (int i = 0; i < selectedBikes.Count(); i++)
+            for (int i = 0; i < selectedPieces.Count(); i++)
             {
-                Bike bike = ctx.Bikes.Find(selectedBikes[i].Id);
-                if (bike != null)
+                Piece piece = ctx.Pieces.Find(selectedPieces[i].Id);
+                if (piece != null)
                 {
-                    sellers.Add(bike.UserId);
+                    sellers.Add(piece.UserId);
                     if (sellers.Count() > 1)
                     {
-                        return new ValidationResult("Bicicletele nu sunt de la acelasi vanzator");
+                        return new ValidationResult("Piesele nu sunt de la acelasi vanzator");
                     }
                 }
             }

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Web.Mvc;
 using BikeShop.Config;
+using BikeShop.Models.Validations;
 
 namespace BikeShop.Models
 {
@@ -24,6 +25,7 @@ namespace BikeShop.Models
 
         [Display(Name = "Data fabricatie")]
         [Required(ErrorMessage = "Data fabricatiei nu a fost selectata")]
+        [DateValidation]
         public DateTime FabricationDate { get; set; }
 
         [Display(Name = "Cantitate")]
