@@ -8,9 +8,6 @@ namespace BikeShop.Models
         [Key]
         public int DeliveryInfoId { get; set; }
 
-        [Display(Name = "CNP")]
-        public string CNP { get; set; }
-
         [Display(Name = "Nume")]
         [Required(ErrorMessage = "Numele nu a fost introdus")]
         [RegularExpression(@"^[ a-zA-Z0-9_-]{2,50}$", ErrorMessage = "Numele trebuie sa contina intre 2 si 50 de caractere [ a-zA-Z0-9_-]")]

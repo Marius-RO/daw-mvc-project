@@ -1,5 +1,6 @@
 ﻿using BikeShop.Config;
 using BikeShop.Models;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,26 +9,45 @@ using System.Web.Mvc;
 
 namespace BikeShop.Controllers
 {
+    [Authorize]
     public class BikeController : Controller
     {
         private ApplicationDbContext ctx = new ApplicationDbContext();
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult Index()
         {
-            List<Bike> bikes = ctx.Bikes.ToList();
+            string userId = User.Identity.GetUserId();
+            List<Bike> bikes;
+
+            // seller see`s only his bikes
+            if (User.IsInRole(Utilities.ROLE_SELLER))
+            {
+                bikes = ctx.Bikes.Where(b => b.UserId == userId).ToList();
+                return View(bikes);
+            }
+
+            // is admin, client or anonym
+            bikes = ctx.Bikes.ToList();
             return View(bikes);
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult Details(int? id)
         {
             if (id.HasValue)
             {
                 Bike bike = ctx.Bikes.Find(id);
-
                 if (bike != null)
                 {
+                    // seller can see only his bikes
+                    if (User.IsInRole(Utilities.ROLE_SELLER) && bike.UserId != User.Identity.GetUserId())
+                    {
+                        return HttpNotFound("Nu s-a gasit bicicleta cu id-ul " + id.ToString() + "!");
+                    }
+
                     return View(bike);
                 }
 
@@ -39,16 +59,19 @@ namespace BikeShop.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = Utilities.ROLE_ADMIN + "," + Utilities.ROLE_SELLER)]
         public ActionResult New()
         {
             Bike bike = new Bike();
-            bike.BikerTypeList = Utilities.GetAllBikerTypes(ctx);
-            bike.BikeCategoryList = Utilities.GetAllBikeCategories(ctx);
-            bike.PiecesListCheckBoxes = Utilities.GetAllPiecesCheckBoxes(ctx);
+            bike.UserId = User.Identity.GetUserId();
+            bike.BikerTypeList = Utilities.GetAllBikerTypes(ctx, userId: bike.UserId);
+            bike.BikeCategoryList = Utilities.GetAllBikeCategories(ctx, userId: bike.UserId);
+            bike.PiecesListCheckBoxes = Utilities.GetAllPiecesCheckBoxes(ctx, userId: bike.UserId);
             return View(bike);
         }
 
         [HttpPost]
+        [Authorize(Roles = Utilities.ROLE_ADMIN + "," + Utilities.ROLE_SELLER)]
         public ActionResult Create(Bike bike)
         {
             try
@@ -56,8 +79,8 @@ namespace BikeShop.Controllers
                 if (!ModelState.IsValid)
                 {
                     // reload select item lists
-                    bike.BikerTypeList = Utilities.GetAllBikerTypes(ctx);
-                    bike.BikeCategoryList = Utilities.GetAllBikeCategories(ctx);
+                    bike.BikerTypeList = Utilities.GetAllBikerTypes(ctx, userId: bike.UserId);
+                    bike.BikeCategoryList = Utilities.GetAllBikeCategories(ctx, userId: bike.UserId);
                     return View("New", bike);
                 }
 
@@ -92,17 +115,19 @@ namespace BikeShop.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = Utilities.ROLE_ADMIN + "," + Utilities.ROLE_SELLER)]
         public ActionResult Edit(int? id)
         {
             if (id.HasValue)
             {
                 Bike bike = ctx.Bikes.Find(id);
-                if (bike != null)
+                if (bike != null && (bike.UserId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
                 {
+
                     // reload select item lists and check boxes lists
-                    bike.BikerTypeList = Utilities.GetAllBikerTypes(ctx);
-                    bike.BikeCategoryList = Utilities.GetAllBikeCategories(ctx);
-                    bike.PiecesListCheckBoxes = Utilities.GetAllPiecesCheckBoxes(ctx);
+                    bike.BikerTypeList = Utilities.GetAllBikerTypes(ctx, userId: bike.UserId);
+                    bike.BikeCategoryList = Utilities.GetAllBikeCategories(ctx, userId: bike.UserId);
+                    bike.PiecesListCheckBoxes = Utilities.GetAllPiecesCheckBoxes(ctx, userId: bike.UserId);
 
                     // mark selected pieces
                     foreach (Piece checkedPiece in bike.Pieces)
@@ -120,6 +145,7 @@ namespace BikeShop.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = Utilities.ROLE_ADMIN + "," + Utilities.ROLE_SELLER)]
         public ActionResult Update(Bike updatedBike)
         {
             try
@@ -127,8 +153,8 @@ namespace BikeShop.Controllers
                 if (!ModelState.IsValid)
                 {
                     // reload select item lists
-                    updatedBike.BikerTypeList = Utilities.GetAllBikerTypes(ctx);
-                    updatedBike.BikeCategoryList = Utilities.GetAllBikeCategories(ctx);
+                    updatedBike.BikerTypeList = Utilities.GetAllBikerTypes(ctx, userId: updatedBike.UserId);
+                    updatedBike.BikeCategoryList = Utilities.GetAllBikeCategories(ctx, userId: updatedBike.UserId);
                     return View("Edit", updatedBike);
                 }
 
@@ -141,7 +167,7 @@ namespace BikeShop.Controllers
 
                 // update bike
                 Bike bike = ctx.Bikes.Single(b => b.BikeId == updatedBike.BikeId);
-                if (bike == null)
+                if (bike == null || !(bike.UserId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
                 {
                     return HttpNotFound("Nu s-a gasit bicicleta cu id-ul " + updatedBike.BikeId.ToString() + "!");
                 }
@@ -188,13 +214,13 @@ namespace BikeShop.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = Utilities.ROLE_ADMIN + "," + Utilities.ROLE_SELLER)]
         public ActionResult Delete(int? id)
         {
             if (id.HasValue)
             {
                 Bike bike = ctx.Bikes.Find(id);
-
-                if (bike != null)
+                if (bike != null && (bike.UserId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
                 {
                     ctx.Bikes.Remove(bike);
                     ctx.SaveChanges();

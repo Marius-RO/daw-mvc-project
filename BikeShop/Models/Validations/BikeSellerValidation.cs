@@ -23,7 +23,7 @@ namespace BikeShop.Models.Validations
             List<CheckBoxModel<Bike>> selectedBikes = new List<CheckBoxModel<Bike>>();
             selectedBikes = order.BikesListCheckBoxes.Where(b => b.Checked).ToList();
             
-            HashSet<int> sellers = new HashSet<int>();
+            HashSet<string> sellers = new HashSet<string>();
             for (int i = 0; i < selectedBikes.Count(); i++)
             {
                 Bike bike = ctx.Bikes.Find(selectedBikes[i].Id);

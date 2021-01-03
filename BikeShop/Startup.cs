@@ -16,7 +16,6 @@ namespace BikeShop
         {
             ConfigureAuth(app);
             CreateAdminAndUserRoles();
-
         }
 
         private void CreateAdminAndUserRoles()
@@ -80,6 +79,28 @@ namespace BikeShop
                 var role = new IdentityRole();
                 role.Name = Utilities.ROLE_CLIENT;
                 roleManager.Create(role);
+
+                // first client
+                var user = new ApplicationUser();
+                user.UserName = "client_1@yahoo.com";
+                user.Email = "client_1@yahoo.com";
+
+                var sellerCreated = userManager.Create(user, "client1234");
+                if (sellerCreated.Succeeded)
+                {
+                    userManager.AddToRole(user.Id, Utilities.ROLE_CLIENT);
+                }
+
+                // second client
+                user = new ApplicationUser();
+                user.UserName = "client_2@gmail.com";
+                user.Email = "client_2@gmail.com";
+
+                sellerCreated = userManager.Create(user, "client1234");
+                if (sellerCreated.Succeeded)
+                {
+                    userManager.AddToRole(user.Id, Utilities.ROLE_CLIENT);
+                }
             }
 
             if (!roleManager.RoleExists(Utilities.ROLE_ADMIN) || 

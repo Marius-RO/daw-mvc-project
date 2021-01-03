@@ -2,14 +2,20 @@
 @model BikeShop.Models.Order
 @{
     ViewBag.Title = "Details";
+    bool adminOrSellerLoggedIn = User.IsInRole(Utilities.ROLE_ADMIN) || User.IsInRole(Utilities.ROLE_SELLER);
 }
 
 <br />
 <br />
 @Html.ActionLink("Inapoi", Utilities.ACTION_INDEX, Utilities.ORDER_CONTROLLER, new { @class = "btn btn-primary" })
-<br />
-<br />
-@Html.ActionLink("Editeaza detalii", Utilities.ACTION_EDIT, new { id = @Model.OrderId }, new { @class = "btn btn-primary" })
+
+
+@if (adminOrSellerLoggedIn)
+{
+    <br />
+    <br />
+    @Html.ActionLink("Editeaza detalii", Utilities.ACTION_EDIT, new { id = @Model.OrderId }, new { @class = "btn btn-primary" })
+}
 <br />
 
 <h2>Detalii comanda @Model.OrderId</h2>
@@ -18,9 +24,6 @@
 <h3>Nume client</h3>
 @Model.DeliveryInfo.Name
 
-<hr />
-<h3>CNP</h3>
-@Model.DeliveryInfo.CNP
 
 <hr />
 <h3>Numar de telefon</h3>
@@ -56,17 +59,14 @@
             </tr>
         </thead>
         <tbody>
+      
             @foreach (BikeShop.Models.Bike p in Model.Bikes)
-            {
-                <tr>
-                    <td>@p.Name</td>
-                </tr>
-                <tr>
-                    <td>@p.Quantity</td>
-                </tr>
-                <tr>
-                    <td>@p.Price</td>
-                </tr>
+            {  
+            <tr>
+                <td>@p.Name</td>
+                <td>@p.Quantity</td>
+                <td>@p.Price</td>
+            </tr>
             }
         </tbody>
     </table>
@@ -88,11 +88,7 @@
             {
                 <tr>
                     <td>@p.Name</td>
-                </tr>
-                <tr>
                     <td>@p.Quantity</td>
-                </tr>
-                <tr>
                     <td>@p.Price</td>
                 </tr>
             }

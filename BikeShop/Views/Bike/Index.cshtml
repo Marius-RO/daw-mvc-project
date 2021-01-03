@@ -2,13 +2,17 @@
 @model List<BikeShop.Models.Bike>
 @{
     ViewBag.Title = "Index";
+    bool adminOrSellerLoggedIn = User.IsInRole(Utilities.ROLE_ADMIN) || User.IsInRole(Utilities.ROLE_SELLER);
 }
 
 <h2>Biciclete</h2>
 
-@Html.ActionLink("Adauga bicicleta", Utilities.ACTION_NEW, Utilities.BIKE_CONTROLLER, new { @class = "btn btn-primary" })
-<br />
-<br />
+@if (adminOrSellerLoggedIn)
+{
+    @Html.ActionLink("Adauga bicicleta", Utilities.ACTION_NEW, Utilities.BIKE_CONTROLLER, new { @class = "btn btn-primary" })
+    <br />
+    <br />
+}
 
 <table id="bikes" class="table table-bordered table-hover">
     <thead>
@@ -16,8 +20,14 @@
             <th>Name</th>
             <th>Recomandat pentru</th>
             <th>Categorie</th>
-            <th>In stoc</th>
-            <th>Cantitate</th>
+            @if (adminOrSellerLoggedIn)
+            {
+                <th>Cantitate</th>
+            }
+            else
+            {
+                <th>In stoc</th>
+            }
             <th>Pret</th>
             <th>Actiuni</th>
         </tr>
@@ -26,34 +36,44 @@
     <tbody>
         @foreach (BikeShop.Models.Bike p in Model)
         {
-        <tr>
-            <td>@p.Name</td>
-            <td>@p.BikerType.Name</td>
-            <td>@p.BikeCategory.Name</td>
+            <tr>
+                <td>@p.Name</td>
+                <td>@p.BikerType.Name</td>
+                <td>@p.BikeCategory.Name</td>
 
-            @if (p.Quantity > 0)
-            {
-                <td>Da</td>
-            }
-            else
-            {
-                <td>Nu</td>
-            }
+                @if (adminOrSellerLoggedIn)
+                {
+                    <td>@p.Quantity</td>
+                }
+                else
+                {
+                    if (p.Quantity > 0)
+                    {
+                        <td>Da</td>
+                    }
+                    else
+                    {
+                        <td>Nu</td>
+                    }
+                }
 
-            <td>@p.Quantity</td>
-            <td>@p.Price</td>
+                <td>@p.Price</td>
 
-            <td>
-                @Html.ActionLink("Mai multe detalii", Utilities.ACTION_DETAILS, new { id = p.BikeId }, new { @class = "btn btn-primary" })
-                <br /><br />
+                <td>
+                    @Html.ActionLink("Mai multe detalii", Utilities.ACTION_DETAILS, new { id = p.BikeId }, new { @class = "btn btn-primary" })
+                    <br /><br />
 
-                @Html.ActionLink("Modifica informatii", Utilities.ACTION_EDIT, new { id = p.BikeId }, new { @class = "btn btn-primary" })
-                <br /><br />
+                    @if (adminOrSellerLoggedIn)
+                    {
+                        @Html.ActionLink("Modifica informatii", Utilities.ACTION_EDIT, new { id = p.BikeId }, new { @class = "btn btn-primary" })
+                        <br /><br />
 
-                <button class="btn-delete btn btn-danger" data-id="@p.BikeId">Sterge</button>
-                <br />
-            </td>
-        </tr>
+                        <button class="btn-delete btn btn-danger" data-id="@p.BikeId">Sterge</button>
+                        <br />
+                    }
+
+                </td>
+            </tr>
         }
 
     </tbody>
@@ -67,29 +87,32 @@
 
             var table = $("#bikes").DataTable();
 
-            $("#bikes").on("click", ".btn-delete", function () {
+            @if (adminOrSellerLoggedIn){
+                <text>
+                    $("#bikes").on("click", ".btn-delete", function () {
 
-                var btnDelete = $(this);
-                var bikeId = btnDelete.attr("data-id");
+                        var btnDelete = $(this);
+                        var bikeId = btnDelete.attr("data-id");
 
-                if (confirm("Esti sigur?")) {
-                    $.ajax(
-                        {
-                            url: "@Utilities.BIKE_CONTROLLER/@Utilities.ACTION_DELETE/" + bikeId,
-                            method: "POST",
-                            success: function () {
-                                console.log("[SUCCESS-delete] bikeId = " + bikeId);
-                                table.row(btnDelete.parents("tr")).remove().draw();
-                            },
-                            error: function () {
-                                console.error("[ERROR-delete] bikeId = " + bikeId);
-                                table.row(btnDelete.parents("tr")).remove().draw();
-                            }
-                        }
-                    );
-                }
-            });
-
+                        if (confirm("Esti sigur?")) {
+                            $.ajax(
+                                {
+                                    url: "@Utilities.BIKE_CONTROLLER/@Utilities.ACTION_DELETE/" + bikeId,
+                                    method: "POST",
+                                    success: function () {
+                                        console.log("[SUCCESS-delete] bikeId = " + bikeId);
+                                        table.row(btnDelete.parents("tr")).remove().draw();
+                                    },
+                                    error: function () {
+                                        console.error("[ERROR-delete] bikeId = " + bikeId);
+                                        table.row(btnDelete.parents("tr")).remove().draw();
+                                    }
+                                }
+                             );
+                         }
+                  });
+                </text>
+            }
         });
     </script>
 }

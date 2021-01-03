@@ -1,5 +1,6 @@
 ﻿using BikeShop.Config;
 using BikeShop.Models;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,8 @@ using System.Web.Mvc;
 
 namespace BikeShop.Controllers
 {
+
+    [Authorize(Roles = Utilities.ROLE_ADMIN + "," + Utilities.ROLE_SELLER)]
     public class BikeCategoryController : Controller
     {
         private ApplicationDbContext ctx = new ApplicationDbContext();
@@ -15,7 +18,18 @@ namespace BikeShop.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            List<BikeCategory> categories = ctx.BikeCategories.ToList();
+
+            string userId = User.Identity.GetUserId();
+            List<BikeCategory> categories;
+
+            if (User.IsInRole(Utilities.ROLE_ADMIN))
+            {
+                categories = ctx.BikeCategories.ToList();
+                return View(categories);
+            }
+
+            // seller role
+            categories = ctx.BikeCategories.Where(b => b.UserId == userId).ToList();
             return View(categories);
         }
 
@@ -26,7 +40,7 @@ namespace BikeShop.Controllers
             {
                 BikeCategory category = ctx.BikeCategories.Find(id);
 
-                if (category != null)
+                if (category != null && (category.UserId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
                 {
                     return View(category);
                 }
@@ -40,8 +54,10 @@ namespace BikeShop.Controllers
         [HttpGet]
         public ActionResult New()
         {
+
             BikeCategory category = new BikeCategory();
-            category.CheckBoxesList = Utilities.GetAllBikeCheckBoxes(ctx);
+            category.UserId = User.Identity.GetUserId();
+            category.CheckBoxesList = Utilities.GetAllBikeCheckBoxes(ctx, userId: category.UserId);
             return View(category);
         }
 
@@ -53,7 +69,7 @@ namespace BikeShop.Controllers
                 if (!ModelState.IsValid)
                 {
                     // reload checkboxes
-                    category.CheckBoxesList = Utilities.GetAllBikeCheckBoxes(ctx);
+                    category.CheckBoxesList = Utilities.GetAllBikeCheckBoxes(ctx, userId: category.UserId);
                     return View("New", category);
                 }
 
@@ -93,10 +109,11 @@ namespace BikeShop.Controllers
             if (id.HasValue)
             {
                 BikeCategory category = ctx.BikeCategories.Find(id);
-                if (category != null)
+                if (category != null && (category.UserId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
                 {
-                    // mark selected bikes
-                    category.CheckBoxesList = Utilities.GetAllBikeCheckBoxes(ctx);
+
+                    // reload checkboxes
+                    category.CheckBoxesList = Utilities.GetAllBikeCheckBoxes(ctx, userId: category.UserId);
                     foreach (Bike checkedBike in category.Bikes)
                     {
                         category.CheckBoxesList.FirstOrDefault(c => c.Id == checkedBike.BikeId).Checked = true;
@@ -120,10 +137,11 @@ namespace BikeShop.Controllers
                 {
                     // reload selected bikes
                     BikeCategory tmp = ctx.BikeCategories.Find(updatedCategory.CategoryId);
-                    if (tmp != null)
+                    if (tmp != null && (tmp.UserId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
                     {
                         updatedCategory.Bikes = tmp.Bikes;
-                        updatedCategory.CheckBoxesList = Utilities.GetAllBikeCheckBoxes(ctx);
+                        updatedCategory.CheckBoxesList = Utilities.GetAllBikeCheckBoxes(ctx, userId: tmp.UserId);
+                       
                         foreach (Bike checkedBike in updatedCategory.Bikes)
                         {
                             updatedCategory.CheckBoxesList.FirstOrDefault(c => c.Id == checkedBike.BikeId).Checked = true;
@@ -142,7 +160,7 @@ namespace BikeShop.Controllers
 
                 // update BikerType
                 BikeCategory category = ctx.BikeCategories.Single(b => b.CategoryId == updatedCategory.CategoryId);
-                if (category == null)
+                if (category == null || !(category.UserId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
                 {
                     return HttpNotFound("Nu s-a gasit categoria de bicicleta cu id-ul " + updatedCategory.CategoryId.ToString() + "!");
                 }
@@ -188,7 +206,7 @@ namespace BikeShop.Controllers
             {
                 BikeCategory category = ctx.BikeCategories.Find(id);
 
-                if (category != null)
+                if (category != null && (category.UserId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
                 {
                     ctx.BikeCategories.Remove(category);
                     ctx.SaveChanges();

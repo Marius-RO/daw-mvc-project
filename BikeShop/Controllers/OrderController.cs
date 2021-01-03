@@ -1,5 +1,6 @@
 ﻿using BikeShop.Config;
 using BikeShop.Models;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Web.Mvc;
 
 namespace BikeShop.Controllers
 {
+    [Authorize]
     public class OrderController : Controller
     {
         private ApplicationDbContext ctx = new ApplicationDbContext();
@@ -15,7 +17,23 @@ namespace BikeShop.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            List<Order> orders = ctx.Orders.ToList();
+            string userId = User.Identity.GetUserId();
+            List<Order> orders;
+
+            if (User.IsInRole(Utilities.ROLE_ADMIN))
+            {
+                orders = ctx.Orders.ToList();
+                return View(orders);
+            }
+
+            if (User.IsInRole(Utilities.ROLE_SELLER))
+            {
+                orders = ctx.Orders.Where(b => b.SellerId == userId).ToList();
+                return View(orders);
+            }
+
+            // client role
+            orders = ctx.Orders.Where(b => b.UserId == userId).ToList();
             return View(orders);
         }
 
@@ -25,7 +43,7 @@ namespace BikeShop.Controllers
             if (id.HasValue)
             {
                 Order order = ctx.Orders.Find(id);
-                if (order != null)
+                if (order != null && (order.UserId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
                 {
                     return View(order);
                 }
@@ -38,16 +56,20 @@ namespace BikeShop.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = Utilities.ROLE_ADMIN + "," + Utilities.ROLE_CLIENT)]
         public ActionResult New()
         {
             Order order = new Order();
+            order.UserId = User.Identity.GetUserId();
             order.DeliveryInfo = new DeliveryInfo();
             order.BikesListCheckBoxes = Utilities.GetAllBikeCheckBoxes(ctx);
             order.PiecesListCheckBoxes = Utilities.GetAllPiecesCheckBoxes(ctx);
+ 
             return View(order);
         }
 
         [HttpPost]
+        [Authorize(Roles = Utilities.ROLE_ADMIN + "," + Utilities.ROLE_CLIENT)]
         public ActionResult Create(Order order)
         {
             try
@@ -110,12 +132,13 @@ namespace BikeShop.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = Utilities.ROLE_ADMIN + "," + Utilities.ROLE_SELLER)]
         public ActionResult Edit(int? id)
         {
             if (id.HasValue)
             {
                 Order order = ctx.Orders.Find(id);
-                if (order != null)
+                if (order != null && (order.UserId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
                 {
                     // reload check boxes lists
                     order.BikesListCheckBoxes = Utilities.GetAllBikeCheckBoxes(ctx);
@@ -143,6 +166,7 @@ namespace BikeShop.Controllers
         }
         
         [HttpPut]
+        [Authorize(Roles = Utilities.ROLE_ADMIN + "," + Utilities.ROLE_SELLER)]
         public ActionResult Update(Order updatedOrder)
         {
             try
@@ -151,7 +175,7 @@ namespace BikeShop.Controllers
                 {
                     // reload selected bikes and pieces
                     Order tmp = ctx.Orders.Find(updatedOrder.OrderId);
-                    if (tmp != null)
+                    if (tmp != null && (tmp.UserId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
                     {
                         updatedOrder.Bikes = tmp.Bikes;
                         updatedOrder.BikesListCheckBoxes = Utilities.GetAllBikeCheckBoxes(ctx);
@@ -187,7 +211,7 @@ namespace BikeShop.Controllers
 
                 // update order an delivery info
                 Order order = ctx.Orders.Single(b => b.OrderId == updatedOrder.OrderId);
-                if (order == null)
+                if (order == null || !(order.UserId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
                 {
                     return HttpNotFound("Nu s-a gasit comanda cu id-ul " + updatedOrder.OrderId.ToString() + "!");
                 }
@@ -202,7 +226,6 @@ namespace BikeShop.Controllers
                 if (TryUpdateModel(deliveryInfo) && TryUpdateModel(order))
                 {
                     deliveryInfo.Name = updatedOrder.DeliveryInfo.Name;
-                    deliveryInfo.CNP = updatedOrder.DeliveryInfo.CNP;
                     deliveryInfo.PhoneNumber = updatedOrder.DeliveryInfo.PhoneNumber;
                     deliveryInfo.Address = updatedOrder.DeliveryInfo.Address;
                     ctx.SaveChanges();
@@ -222,7 +245,7 @@ namespace BikeShop.Controllers
                     for (int i = 0; i < selectedBikes.Count(); i++)
                     {
                         Bike bike = ctx.Bikes.Find(selectedBikes[i].Id);
-                        if (bike != null)
+                        if (bike != null )
                         {
                             order.Bikes.Add(bike);
                         }
@@ -258,12 +281,13 @@ namespace BikeShop.Controllers
         
        
         [HttpPost]
+        [Authorize(Roles = Utilities.ROLE_ADMIN)]
         public ActionResult Delete(int? id)
         {
             if (id.HasValue)
             {
                 Order order = ctx.Orders.Find(id);
-                if (order != null)
+                if (order != null && (order.UserId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
                 {
                     DeliveryInfo deliveryInfo = ctx.DeliveryInfos.Find(order.DeliveryInfo.DeliveryInfoId);
 
@@ -278,7 +302,7 @@ namespace BikeShop.Controllers
                     return HttpNotFound("Nu s-a gasit informatia de livrare cu id-ul " + order.DeliveryInfo.DeliveryInfoId.ToString() + "!");
                 }
 
-                return HttpNotFound("Nu s-a gasit bicicleta cu id-ul " + id.ToString() + "!");
+                return HttpNotFound("Nu s-a gasit comanda cu id-ul " + id.ToString() + "!");
             }
 
             return HttpNotFound("Lipseste parametrul id!");

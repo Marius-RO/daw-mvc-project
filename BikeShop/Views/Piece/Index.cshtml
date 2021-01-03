@@ -2,22 +2,33 @@
 @model List<BikeShop.Models.Piece>
 @{
     ViewBag.Title = "Index";
+    bool adminOrSellerLoggedIn = User.IsInRole(Utilities.ROLE_ADMIN) || User.IsInRole(Utilities.ROLE_SELLER);
+    bool clientOrNotLoggedIn = !adminOrSellerLoggedIn;
 }
 
 <h2>Piese</h2>
 
-@Html.ActionLink("Adauga piesa", Utilities.ACTION_NEW, Utilities.PIECE_CONTROLLER, new { @class = "btn btn-primary" })
-<br />
-<br />
-
+@if (adminOrSellerLoggedIn)
+{
+    @Html.ActionLink("Adauga piesa", Utilities.ACTION_NEW, Utilities.PIECE_CONTROLLER, new { @class = "btn btn-primary" })
+    <br />
+    <br />
+}
 
 <table id="pieces" class="table table-bordered table-hover">
     <thead>
         <tr>
             <th>Name</th>
             <th>Accesoriu</th>
-            <th>In stoc</th>
-            <th>Cantitate</th>
+            @if (adminOrSellerLoggedIn)
+            {
+                <th>Vanzare</th>
+                <th>Cantitate</th>
+            }
+            else
+            {
+                <th>In stoc</th>
+            }
             <th>Pret</th>
             <th>Actiuni</th>
         </tr>
@@ -26,41 +37,66 @@
     <tbody>
         @foreach (BikeShop.Models.Piece p in Model)
         {
-        <tr>
-            <td>@p.Name</td>
-
-            @if (p.IsAccessory)
+            if(clientOrNotLoggedIn && !p.IsIndependent)
             {
-                <td>Da</td>
-            }
-            else
-            {
-                <td>Nu</td>
+                continue;
             }
 
-            @if (p.Quantity > 0)
-            {
-                <td>Da</td>
-            }
-            else
-            {
-                <td>Nu</td>
-            }
+            <tr>
+                <td>@p.Name</td>
 
-            <td>@p.Quantity</td>
-            <td>@p.Price</td>
+                @if (p.IsAccessory)
+                {
+                    <td>Da</td>
+                }
+                else
+                {
+                    <td>Nu</td>
+                }
 
-            <td>
-                @Html.ActionLink("Mai multe detalii", Utilities.ACTION_DETAILS, new { id = p.PieceId }, new { @class = "btn btn-primary" })
-                <br /><br />
+                @if (adminOrSellerLoggedIn)
+                {
 
-                @Html.ActionLink("Modifica informatii", Utilities.ACTION_EDIT, new { id = p.PieceId }, new { @class = "btn btn-primary" })
-                <br /><br />
+                    if (p.IsIndependent)
+                    {
+                        <td>Da</td>
+                    }
+                    else
+                    {
+                        <td>Nu</td>
+                    }
 
-                <button class="btn-delete btn btn-danger" data-id="@p.PieceId">Sterge</button>
-                <br />
-            </td>
-        </tr>
+                    <td>@p.Quantity</td>
+                }
+                else
+                {
+                    if (p.Quantity > 0)
+                    {
+                        <td>Da</td>
+                    }
+                    else
+                    {
+                        <td>Nu</td>
+                    }
+                }
+
+                <td>@p.Price</td>
+
+                <td>
+                    @Html.ActionLink("Mai multe detalii", Utilities.ACTION_DETAILS, new { id = p.PieceId }, new { @class = "btn btn-primary" })
+                    <br /><br />
+
+                    @if (adminOrSellerLoggedIn)
+                    {
+                        @Html.ActionLink("Modifica informatii", Utilities.ACTION_EDIT, new { id = p.PieceId }, new { @class = "btn btn-primary" })
+                        <br /><br />
+
+                        <button class="btn-delete btn btn-danger" data-id="@p.PieceId">Sterge</button>
+                        <br />
+                    }
+
+                </td>
+            </tr>
         }
 
     </tbody>
@@ -74,28 +110,34 @@
 
             var table = $("#pieces").DataTable();
 
-            $("#pieces").on("click", ".btn-delete", function () {
+            @if (adminOrSellerLoggedIn)
+            {   <text>
 
-                var btnDelete = $(this);
-                var pieceId = btnDelete.attr("data-id");
+                    $("#pieces").on("click", ".btn-delete", function () {
 
-                if (confirm("Esti sigur?")) {
-                    $.ajax(
-                        {
-                            url: "@Utilities.PIECE_CONTROLLER/@Utilities.ACTION_DELETE/" + pieceId,
-                            method: "POST",
-                            success: function () {
-                                console.log("[SUCCESS-delete] pieceId = " + pieceId);
-                                table.row(btnDelete.parents("tr")).remove().draw();
-                            },
-                            error: function () {
-                                console.error("[ERROR-delete] pieceId = " + pieceId);
-                                table.row(btnDelete.parents("tr")).remove().draw();
-                            }
+                        var btnDelete = $(this);
+                        var pieceId = btnDelete.attr("data-id");
+
+                        if (confirm("Esti sigur?")) {
+                            $.ajax(
+                                {
+                                    url: "@Utilities.PIECE_CONTROLLER/@Utilities.ACTION_DELETE/" + pieceId,
+                                    method: "POST",
+                                    success: function () {
+                                        console.log("[SUCCESS-delete] pieceId = " + pieceId);
+                                        table.row(btnDelete.parents("tr")).remove().draw();
+                                    },
+                                    error: function () {
+                                        console.error("[ERROR-delete] pieceId = " + pieceId);
+                                        table.row(btnDelete.parents("tr")).remove().draw();
+                                    }
+                                }
+                            );
                         }
-                    );
-                }
-            });
+                    });
+
+                </text>
+            }
 
         });
     </script>

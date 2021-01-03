@@ -28,7 +28,7 @@ namespace BikeShop.Models.Validations
             // check if bikes and pieces are from the same seller
             // here we know that bikes if any are from one seller and pieces if any are from one seller
             // (because of BikeSellerValidation and PieceSellerValidation)
-            int sellerId = 0;
+            string sellerId = "";
             List<CheckBoxModel<Bike>> selectedBikes = new List<CheckBoxModel<Bike>>();
             List<CheckBoxModel<Piece>> selectedPieces = new List<CheckBoxModel<Piece>>();
 
@@ -54,7 +54,7 @@ namespace BikeShop.Models.Validations
                 }
             }
 
-
+            /*
             if (order.PiecesListCheckBoxes != null)
             {
                 selectedPieces = order.PiecesListCheckBoxes.Where(b => b.Checked).ToList();
@@ -71,6 +71,7 @@ namespace BikeShop.Models.Validations
                     return ValidationResult.Success;
                 }
             }
+            */
 
             return ValidationResult.Success;
 

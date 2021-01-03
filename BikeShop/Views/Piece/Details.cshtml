@@ -2,14 +2,20 @@
 @model BikeShop.Models.Piece
 @{
     ViewBag.Title = "Details";
+    bool adminOrSellerLoggedIn = User.IsInRole(Utilities.ROLE_ADMIN) || User.IsInRole(Utilities.ROLE_SELLER);
 }
 
 <br />
 <br />
 @Html.ActionLink("Inapoi", Utilities.ACTION_INDEX, Utilities.PIECE_CONTROLLER, new { @class = "btn btn-primary" })
-<br />
-<br />
-@Html.ActionLink("Editeaza detalii", Utilities.ACTION_EDIT, new { id = @Model.PieceId }, new { @class = "btn btn-primary" })
+
+@if (adminOrSellerLoggedIn)
+{
+    <br />
+    <br />
+    @Html.ActionLink("Editeaza detalii", Utilities.ACTION_EDIT, new { id = @Model.PieceId }, new { @class = "btn btn-primary" })
+}
+
 <br />
 
 <h2>Detalii piesa @Model.Name</h2>

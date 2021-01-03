@@ -7,29 +7,45 @@ namespace BikeShop.Config
 {
     public abstract class Utilities
     {
-        public static readonly int MAX_NAME_FIELD_LENGTH = 20;
+        // exceptionnotfound.net/const-vs-static-vs-readonly-in-c-sharp-applications/
+        public const int MAX_NAME_FIELD_LENGTH = 20;
+        public const string BIKE_CONTROLLER = "Bike";
+        public const string PIECE_CONTROLLER = "Piece";
+        public const string BIKER_TYPE_CONTROLLER = "BikerType";
+        public const string BIKE_CATEGORY_CONTROLLER = "BikeCategory";
+        public const string ORDER_CONTROLLER = "Order";
+        public const string ACTION_INDEX = "Index";
+        public const string ACTION_DETAILS = "Details";
+        public const string ACTION_NEW = "New";
+        public const string ACTION_CREATE = "Create";
+        public const string ACTION_EDIT = "Edit";
+        public const string ACTION_UPDATE = "Update";
+        public const string ACTION_DELETE = "Delete";
+        public const string ROLE_ADMIN = "Admin";
+        public const string ROLE_SELLER = "Seller";
+        public const string ROLE_CLIENT = "Client";
 
-        public static readonly string BIKE_CONTROLLER = "Bike";
-        public static readonly string PIECE_CONTROLLER = "Piece";
-        public static readonly string BIKER_TYPE_CONTROLLER = "BikerType";
-        public static readonly string BIKE_CATEGORY_CONTROLLER = "BikeCategory";
-        public static readonly string ORDER_CONTROLLER = "Order";
-        public static readonly string ACTION_INDEX = "Index";
-        public static readonly string ACTION_DETAILS = "Details";
-        public static readonly string ACTION_NEW = "New";
-        public static readonly string ACTION_CREATE = "Create";
-        public static readonly string ACTION_EDIT = "Edit";
-        public static readonly string ACTION_UPDATE = "Update";
-        public static readonly string ACTION_DELETE = "Delete";
-
-        public static readonly string ROLE_ADMIN = "Admin";
-        public static readonly string ROLE_SELLER = "Seller";
-        public static readonly string ROLE_CLIENT = "Client";
-
-        public static List<CheckBoxModel<Piece>> GetAllPiecesCheckBoxes(ApplicationDbContext ctx)
+        public static List<CheckBoxModel<Piece>> GetAllPiecesCheckBoxes(ApplicationDbContext ctx, string userId = null, 
+            bool reverseSearch = false)
         {
             var checkboxList = new List<CheckBoxModel<Piece>>();
-            foreach (var piece in ctx.Pieces.ToList())
+            List<Piece> pieceList;
+            if(userId != null)
+            {
+                if (reverseSearch)
+                {
+                    pieceList = ctx.Pieces.Where(b => b.UserId != userId).ToList();
+                }
+                else
+                {
+                    pieceList = ctx.Pieces.Where(b => b.UserId == userId).ToList();
+                }
+            }
+            else
+            {
+                pieceList = ctx.Pieces.ToList();
+            }
+            foreach (var piece in pieceList)
             {
                 checkboxList.Add(new CheckBoxModel<Piece>
                 {
@@ -43,10 +59,27 @@ namespace BikeShop.Config
             return checkboxList;
         }
 
-        public static List<CheckBoxModel<Bike>> GetAllBikeCheckBoxes(ApplicationDbContext ctx)
+        public static List<CheckBoxModel<Bike>> GetAllBikeCheckBoxes(ApplicationDbContext ctx, string userId = null, 
+            bool reverseSearch = false)
         {
             var checkBoxList = new List<CheckBoxModel<Bike>>();
-            foreach (var bike in ctx.Bikes.ToList())
+            List<Bike> bikeList;
+            if (userId != null)
+            {
+                if (reverseSearch)
+                {
+                    bikeList = ctx.Bikes.Where(b => b.UserId != userId).ToList();
+                }
+                else
+                {
+                    bikeList = ctx.Bikes.Where(b => b.UserId == userId).ToList();
+                }
+            }
+            else
+            {
+                bikeList = ctx.Bikes.ToList();
+            }
+            foreach (var bike in bikeList)
             {
                 checkBoxList.Add(new CheckBoxModel<Bike>
                 {
@@ -60,10 +93,26 @@ namespace BikeShop.Config
             return checkBoxList;
         }
 
-        public static IEnumerable<SelectListItem> GetAllBikerTypes(ApplicationDbContext ctx)
+        public static IEnumerable<SelectListItem> GetAllBikerTypes(ApplicationDbContext ctx, string userId = null, bool reverseSearch = false)
         {
             var selectList = new List<SelectListItem>();
-            foreach (var type in ctx.BikerTypes.ToList())
+            List<BikerType> typeList;
+            if (userId != null)
+            {
+                if (reverseSearch)
+                {
+                    typeList = ctx.BikerTypes.Where(b => b.UserId != userId).ToList();
+                }
+                else
+                {
+                    typeList = ctx.BikerTypes.Where(b => b.UserId == userId).ToList();
+                }
+            }
+            else
+            {
+                typeList = ctx.BikerTypes.ToList();
+            }
+            foreach (var type in typeList)
             {
                 selectList.Add(new SelectListItem
                 {
@@ -74,10 +123,27 @@ namespace BikeShop.Config
             return selectList;
         }
 
-        public static IEnumerable<SelectListItem> GetAllBikeCategories(ApplicationDbContext ctx)
+        public static IEnumerable<SelectListItem> GetAllBikeCategories(ApplicationDbContext ctx, string userId = null, 
+            bool reverseSearch = false)
         {
             var selectList = new List<SelectListItem>();
-            foreach (var category in ctx.BikeCategories.ToList())
+            List<BikeCategory> categoryList;
+            if (userId != null)
+            {
+                if (reverseSearch)
+                {
+                    categoryList = ctx.BikeCategories.Where(b => b.UserId != userId).ToList();
+                }
+                else
+                {
+                    categoryList = ctx.BikeCategories.Where(b => b.UserId == userId).ToList();
+                }
+            }
+            else
+            {
+                categoryList = ctx.BikeCategories.ToList();
+            }
+            foreach (var category in categoryList)
             {
                 selectList.Add(new SelectListItem
                 {
@@ -104,5 +170,6 @@ namespace BikeShop.Config
 
             return selectList;
         }
+
     }
 }

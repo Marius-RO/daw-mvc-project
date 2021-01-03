@@ -12,12 +12,12 @@ namespace BikeShop.Models.Validations
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             RegisterViewModel model = (RegisterViewModel)validationContext.ObjectInstance;
-            Regex regex = new Regex(@"^[a-zA-Z0-9]{2,20}[@](gmail.com|yahoo.com)$");
+            Regex regex = new Regex(@"^[a-zA-Z0-9_.-]{2,20}[@](gmail.com|yahoo.com)$");
             Match match = regex.Match(model.Email);
             if (match.Success)
                 return ValidationResult.Success;
 
-            return new ValidationResult("Adresa de email invalida. Trebuie sa fie de forma [{2,20}@yahho.com] sau [{2,20}@gamil.com]");
+            return new ValidationResult("Adresa de email invalida. Trebuie sa fie de forma [{2,20}@yahoo.com] sau [{2,20}@gmail.com]");
         }
     }
 }

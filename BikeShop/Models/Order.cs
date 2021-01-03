@@ -14,7 +14,7 @@ namespace BikeShop.Models
         public int OrderId { get; set; }
 
         [Required]
-        public int SellerId { get; set; }
+        public string SellerId { get; set; }
 
         [Required]
         public string OrderDate { get; set; }
@@ -28,7 +28,7 @@ namespace BikeShop.Models
         public virtual DeliveryInfo DeliveryInfo { get; set; }
 
         // one-to-many
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public virtual ApplicationUser User { get; set; }
 
         // many-to-many

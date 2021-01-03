@@ -20,13 +20,6 @@
     @Html.ValidationMessageFor(b => b.DeliveryInfo.Name, "", new { @class = "text-danger" })
     <br />
 
-    @Html.LabelFor(b => b.DeliveryInfo.CNP)
-    <br />
-    @Html.TextBoxFor(b => b.DeliveryInfo.CNP, new { placeholder = "Introdu CNP", @class = "form-control" })
-    @Html.ValidationMessageFor(b => b.DeliveryInfo.CNP, "", new { @class = "text-danger" })
-    <br />
-
-
     @Html.LabelFor(b => b.DeliveryInfo.PhoneNumber)
     <br />
     @Html.TextBoxFor(b => b.DeliveryInfo.PhoneNumber, new { placeholder = "Introdu numarul de telefon", @class = "form-control" })
@@ -190,7 +183,7 @@
 
 
 
-    @Html.HiddenFor(b => b.SellerId, new { @Value = 0 })
+    @Html.HiddenFor(b => b.SellerId, new { @Value = "0" })
     @Html.ValidationMessageFor(b => b.SellerId, "", new { @class = "text-danger" })
 
     @Html.HiddenFor(b => b.OrderDate, new { @Value = Model.OrderDate })
@@ -203,6 +196,8 @@
 
 
     @Html.HiddenFor(b => b.OrderId, new { @Value = Model.OrderId })
+
+    @Html.HiddenFor(b => b.UserId)
 
     <button type="submit">Salveaza modificarile</button>
 }

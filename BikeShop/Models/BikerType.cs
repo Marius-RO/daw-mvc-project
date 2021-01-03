@@ -19,6 +19,10 @@ namespace BikeShop.Models
         [MaxLength(350, ErrorMessage = "Descrierea nu poate fi mai mare 350 de caractere")]
         public string Description { get; set; }
 
+        // one to many
+        public string UserId { get; set; }
+        public virtual ApplicationUser User { get; set; }
+
         // many-to-one
         public virtual ICollection<Bike> Bikes { get; set; }
 

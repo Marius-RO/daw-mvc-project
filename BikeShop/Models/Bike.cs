@@ -49,7 +49,7 @@ namespace BikeShop.Models
         public virtual BikeCategory BikeCategory { get; set; }
 
         // one to many
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public virtual ApplicationUser User { get; set; }
 
         // many-to-many
