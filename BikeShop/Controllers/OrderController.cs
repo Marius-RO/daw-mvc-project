@@ -85,6 +85,9 @@ namespace BikeShop.Controllers
                 // add delivery info to db
                 ctx.DeliveryInfos.Add(order.DeliveryInfo);
 
+                float orderValue = 0.0f;
+                string sellerId = null;
+
                 // add bikes if any
                 List<CheckBoxModel<Bike>> selectedBikes = new List<CheckBoxModel<Bike>>();
                 if (order.BikesListCheckBoxes != null)
@@ -99,6 +102,12 @@ namespace BikeShop.Controllers
                     if (bike != null)
                     {
                         order.Bikes.Add(bike);
+                        orderValue += bike.Price;
+
+                        if (sellerId != null)
+                        {
+                            sellerId = bike.UserId;
+                        }
                     }
                 }
 
@@ -116,8 +125,19 @@ namespace BikeShop.Controllers
                     if (piece != null)
                     {
                         order.Pieces.Add(piece);
+                        orderValue += piece.Price;
+
+                        if (sellerId != null)
+                        {
+                            sellerId = piece.UserId;
+                        }
                     }
                 }
+
+                // add order info
+                order.SellerId = sellerId;
+                order.OrderValue = orderValue;
+                order.OrderDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
                 ctx.Orders.Add(order);
                 ctx.SaveChanges();
@@ -230,16 +250,15 @@ namespace BikeShop.Controllers
                     deliveryInfo.Address = updatedOrder.DeliveryInfo.Address;
                     ctx.SaveChanges();
 
-                    
-                    order.SellerId = updatedOrder.SellerId;
                     order.OrderDate = updatedOrder.OrderDate;
-                    order.OrderValue = updatedOrder.OrderValue;
                     order.DeliveryInfo = deliveryInfo;
                     order.Bikes.Clear();
                     order.Bikes = new List<Bike>();
                     order.Pieces.Clear();
                     order.Pieces = new List<Piece>();
 
+                    float orderValue = 0.0f;
+                    string sellerId = null;
 
                     // add new bikes if any
                     for (int i = 0; i < selectedBikes.Count(); i++)
@@ -248,6 +267,12 @@ namespace BikeShop.Controllers
                         if (bike != null )
                         {
                             order.Bikes.Add(bike);
+                            orderValue += bike.Price;
+
+                            if(sellerId != null)
+                            {
+                                sellerId = bike.UserId;
+                            }
                         }
                     }
 
@@ -258,8 +283,17 @@ namespace BikeShop.Controllers
                         if (piece != null)
                         {
                             order.Pieces.Add(piece);
+                            orderValue += piece.Price;
+
+                            if (sellerId != null)
+                            {
+                                sellerId = piece.UserId;
+                            }
                         }
                     }
+
+                    order.SellerId = sellerId;
+                    order.OrderValue = orderValue;
 
                     ctx.SaveChanges();
                     return RedirectToAction("Index");
