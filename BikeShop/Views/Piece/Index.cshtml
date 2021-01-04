@@ -18,6 +18,7 @@
 <table id="pieces" class="table table-bordered table-hover">
     <thead>
         <tr>
+            <th>Piesa</th>
             <th>Name</th>
             <th>Accesoriu</th>
             @if (adminOrSellerLoggedIn)
@@ -37,12 +38,19 @@
     <tbody>
         @foreach (BikeShop.Models.Piece p in Model)
         {
+            
             if(clientOrNotLoggedIn && !p.IsIndependent)
             {
                 continue;
             }
 
             <tr>
+                 <td>
+                    @if (p.ImagePath != null)
+                    {
+                        <img src="@p.ImagePath" alt="piece_photo" width="200">
+                    }
+                </td>
                 <td>@p.Name</td>
 
                 @if (p.IsAccessory)

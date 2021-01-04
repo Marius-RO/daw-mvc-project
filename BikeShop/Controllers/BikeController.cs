@@ -84,6 +84,8 @@ namespace BikeShop.Controllers
                     return View("New", bike);
                 }
 
+                bike.ImagePath = Utilities.BIKES_IMAGES_PATH + bike.ImagePath;
+
                 // add pieces if any
                 List<CheckBoxModel<Piece>> selectedPieces = new List<CheckBoxModel<Piece>>();
                 if (bike.PiecesListCheckBoxes != null)
@@ -101,6 +103,7 @@ namespace BikeShop.Controllers
                     }
                 }
 
+    
                 // add info in db
                 ctx.Bikes.Add(bike);
                 ctx.SaveChanges();
@@ -179,6 +182,10 @@ namespace BikeShop.Controllers
                     bike.FabricationDate = updatedBike.FabricationDate;
                     bike.Quantity = updatedBike.Quantity;
                     bike.Price = updatedBike.Price;
+                    if (updatedBike.NewImagePath != null)
+                    {
+                        bike.ImagePath = Utilities.BIKES_IMAGES_PATH + updatedBike.NewImagePath;
+                    }
                     bike.BikerTypeId = updatedBike.BikerTypeId;
                     bike.BikeCategoryId = updatedBike.BikeCategoryId;
 

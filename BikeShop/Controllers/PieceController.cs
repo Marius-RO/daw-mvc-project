@@ -29,8 +29,15 @@ namespace BikeShop.Controllers
                 return View(pieces);
             }
 
-            // is admin, client or anonym
-            pieces = ctx.Pieces.ToList();
+            // admin see`s everything
+            if (User.IsInRole(Utilities.ROLE_ADMIN))
+            {
+                pieces = ctx.Pieces.ToList();
+                return View(pieces);
+            }
+
+            // client or anonymus see only pieces for sale
+            pieces = ctx.Pieces.Where(b => b.IsIndependent == true).ToList();
             return View(pieces);
         }
 
@@ -84,6 +91,8 @@ namespace BikeShop.Controllers
                     piece.AccessoryOptionList = Utilities.GetBasicOptions();
                     return View("New", piece);
                 }
+
+                piece.ImagePath = Utilities.PIECES_IMAGES_PATH + piece.ImagePath;
 
                 // add bikes if any
                 List<CheckBoxModel<Bike>> selectedCheckBoxes = new List<CheckBoxModel<Bike>>();
@@ -180,7 +189,10 @@ namespace BikeShop.Controllers
                     piece.Quantity = updatedPiece.Quantity;
                     piece.Price = updatedPiece.Price;
                     piece.IsIndependent = updatedPiece.IsIndependent;
-
+                    if (updatedPiece.NewImagePath != null)
+                    {
+                        piece.ImagePath = Utilities.PIECES_IMAGES_PATH + updatedPiece.NewImagePath;
+                    }
                     piece.Bikes.Clear();
                     piece.Bikes = new List<Bike>();
 

@@ -20,6 +20,14 @@
 
 <h2>Detalii piesa @Model.Name</h2>
 
+@if (@Model.ImagePath != null)
+{
+    <hr />
+    <label>Imagine</label>
+    <br />
+    <img src="../@Model.ImagePath" alt="piece_photo" width="200">
+}
+
 <hr />
 <h3>Descriere</h3>
 @Model.Description

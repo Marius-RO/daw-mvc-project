@@ -15,7 +15,7 @@ namespace BikeShop.Models
 
         [Display(Name = "Nume bicicleta")]
         [Required(ErrorMessage = "Numele bicicletei nu a fost introdus")]
-        [RegularExpression(@"^[ a-zA-Z0-9_-]{5,20}$", ErrorMessage = "Numele bicicletei trebuie sa contina intre 5 si 20 de caractere [ a-zA-Z0-9_-]")]
+        [RegularExpression(@"^[ a-zA-Z0-9_-]{5,40}$", ErrorMessage = "Numele bicicletei trebuie sa contina intre 5 si 40 de caractere [ a-zA-Z0-9_-]")]
         public string Name { get; set; }
 
         [Display(Name = "Descriere")]
@@ -35,6 +35,9 @@ namespace BikeShop.Models
         [Display(Name = "Pret")]
         [Range(1, 1000, ErrorMessage = "Pret incorect (1,1000)")]
         public float Price { get; set; }
+
+        [Display(Name = "Alege imagine")]
+        public string ImagePath { get; set; }
 
         // one to many
         [Display(Name = "Categorie biciclist")]
@@ -66,5 +69,10 @@ namespace BikeShop.Models
         public IEnumerable<SelectListItem> BikerTypeList { get; set; }
         [NotMapped]
         public IEnumerable<SelectListItem> BikeCategoryList { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Schima imaginea")]
+        public string NewImagePath { get; set; }
+
     }
 }

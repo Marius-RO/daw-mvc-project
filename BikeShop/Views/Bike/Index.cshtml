@@ -17,6 +17,7 @@
 <table id="bikes" class="table table-bordered table-hover">
     <thead>
         <tr>
+            <th>Bicicleta</th>
             <th>Name</th>
             <th>Recomandat pentru</th>
             <th>Categorie</th>
@@ -37,6 +38,12 @@
         @foreach (BikeShop.Models.Bike p in Model)
         {
             <tr>
+                <td>
+                    @if (p.ImagePath != null)
+                    {
+                        <img src="@p.ImagePath" alt="bike_photo" width="200">
+                    }
+                </td>
                 <td>@p.Name</td>
                 <td>@p.BikerType.Name</td>
                 <td>@p.BikeCategory.Name</td>

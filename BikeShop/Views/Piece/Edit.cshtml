@@ -59,6 +59,19 @@
     <br />
 
 
+    <div id="imgDiv" style="display: none;">
+        <br />
+        <label>Imagine selectata</label>
+        <br />
+        <img id="selectedImg" src="" alt="bike_photo" width="200">
+        <br />
+    </div>
+
+    @Html.LabelFor(b => b.NewImagePath)
+    @Html.TextBoxFor(b => b.NewImagePath, new { type = "file", @class = "form-control" })
+    <br />
+
+
     <br />
     @Html.LabelFor(b => b.Bikes, "Alege biciclete care contin aceasta piesa")
     <br />
@@ -110,6 +123,33 @@
     <script>
         $(document).ready(function () {
             $("#bikes").DataTable();
+
+            const newImgPath = document.getElementById("NewImagePath");
+            const selectedImg = document.getElementById("selectedImg");
+            const imgDiv = document.getElementById("imgDiv");
+
+            @if(Model.ImagePath != null)
+            {   <text>
+                    selectedImg.src = "../@Model.ImagePath";
+                    imgDiv.style.display = "inherit";
+                </text>
+            }
+            else
+            {
+                @:imgDiv.style.display = "none";
+            }
+
+            newImgPath.addEventListener("change", handleImage, false);
+            function handleImage() {
+                if (!newImgPath.value) {
+                    selectedImg.src = "../@Model.ImagePath";
+                    return;
+                }
+                var filePath = newImgPath.value.split('\\')[2];
+                selectedImg.src = "../@Utilities.PIECES_IMAGES_PATH" + filePath;
+                imgDiv.style.display = "inherit";
+            }
+
         });
     </script>
 }

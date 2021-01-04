@@ -14,7 +14,7 @@ namespace BikeShop.Models
 
         [Display(Name = "Nume piesa")]
         [Required(ErrorMessage = "Numele piese nu a fost introdus")]
-        [RegularExpression(@"^[ a-zA-Z0-9_-]{5,20}$", ErrorMessage = "Numele piesei trebuie sa contina intre 5 si 20 de caractere [ a-zA-Z0-9_-]")]
+        [RegularExpression(@"^[ a-zA-Z0-9_-]{5,40}$", ErrorMessage = "Numele piesei trebuie sa contina intre 5 si 40 de caractere [ a-zA-Z0-9_-]")]
         public string Name { get; set; }
 
         [Display(Name = "Descriere")]
@@ -43,6 +43,9 @@ namespace BikeShop.Models
         [Required(ErrorMessage = "Alege daca este accesoriu")]
         public bool IsAccessory { get; set; }
 
+        [Display(Name = "Alege imagine")]
+        public string ImagePath { get; set; }
+
         // many-to-many
         public virtual ICollection<Bike> Bikes { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
@@ -58,5 +61,9 @@ namespace BikeShop.Models
         public IEnumerable<SelectListItem> AccessoryOptionList { get; set; }
         [NotMapped]
         public List<CheckBoxModel<Bike>> BikeCheckBoxesList { get; set; }
+
+        [NotMapped]
+        [Display(Name = "Schima imaginea")]
+        public string NewImagePath { get; set; }
     }
 }

@@ -24,9 +24,12 @@ namespace BikeShop.Config
         public const string ROLE_ADMIN = "Admin";
         public const string ROLE_SELLER = "Seller";
         public const string ROLE_CLIENT = "Client";
+        public const string BIKES_IMAGES_PATH = "../Images/Bikes/";
+        public const string PIECES_IMAGES_PATH = "../Images/Pieces/";
+
 
         public static List<CheckBoxModel<Piece>> GetAllPiecesCheckBoxes(ApplicationDbContext ctx, string userId = null, 
-            bool reverseSearch = false)
+            bool reverseSearch = false, bool forSale = false, bool inStoc = false)
         {
             var checkboxList = new List<CheckBoxModel<Piece>>();
             List<Piece> pieceList;
@@ -47,6 +50,11 @@ namespace BikeShop.Config
             }
             foreach (var piece in pieceList)
             {
+                if((inStoc && piece.Quantity == 0) || (forSale && !piece.IsIndependent))
+                {
+                    continue;
+                }
+
                 checkboxList.Add(new CheckBoxModel<Piece>
                 {
                     Id = piece.PieceId,
@@ -60,7 +68,7 @@ namespace BikeShop.Config
         }
 
         public static List<CheckBoxModel<Bike>> GetAllBikeCheckBoxes(ApplicationDbContext ctx, string userId = null, 
-            bool reverseSearch = false)
+            bool reverseSearch = false, bool inStoc = false)
         {
             var checkBoxList = new List<CheckBoxModel<Bike>>();
             List<Bike> bikeList;
@@ -81,6 +89,11 @@ namespace BikeShop.Config
             }
             foreach (var bike in bikeList)
             {
+                if (inStoc && bike.Quantity == 0)
+                {
+                    continue;
+                }
+
                 checkBoxList.Add(new CheckBoxModel<Bike>
                 {
                     Id = bike.BikeId,
