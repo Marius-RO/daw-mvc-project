@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - BikeShop</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
@@ -18,13 +18,10 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("BikeShop", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("BikeShop", Utilities.ACTION_INDEX, Utilities.BIKE_CONTROLLER, new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                     <li>@Html.ActionLink("Biciclete", Utilities.ACTION_INDEX, Utilities.BIKE_CONTROLLER)</li>
                     <li>@Html.ActionLink("Piese", Utilities.ACTION_INDEX, Utilities.PIECE_CONTROLLER)</li>
                     @if (User.IsInRole(Utilities.ROLE_ADMIN) || User.IsInRole(Utilities.ROLE_SELLER))
@@ -37,6 +34,10 @@
                     {
                         <li>@Html.ActionLink("Comenzi", Utilities.ACTION_INDEX, Utilities.ORDER_CONTROLLER)</li>
                     }
+                    <!--
+                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>-->
+
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -46,7 +47,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p>&copy; @DateTime.Now.Year - BikeShop</p>
         </footer>
     </div>
 

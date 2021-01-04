@@ -72,7 +72,7 @@
                                 {
                                     <br />
                                     @Html.ActionLink("Mai multe detalii", Utilities.ACTION_DETAILS, Utilities.BIKE_CONTROLLER,
-                                   new { id = Model.BikesListCheckBoxes[i].Object.BikeId })
+                                   new { id = Model.BikesListCheckBoxes[i].Object.BikeId }, new { })
                                 }
                             </td>
 
@@ -145,7 +145,7 @@
                                 @if (Model.PiecesListCheckBoxes[i].Object != null)
                                 {
                                     @Html.ActionLink("Mai multe detalii", Utilities.ACTION_DETAILS, Utilities.PIECE_CONTROLLER,
-                                        new { id = Model.PiecesListCheckBoxes[i].Object.PieceId })
+                                        new { id = Model.PiecesListCheckBoxes[i].Object.PieceId }, new { })
                                 }
                                 <br />
 

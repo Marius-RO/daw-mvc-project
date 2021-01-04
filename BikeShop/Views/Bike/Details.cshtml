@@ -5,10 +5,6 @@
     bool adminOrSellerLoggedIn = User.IsInRole(Utilities.ROLE_ADMIN) || User.IsInRole(Utilities.ROLE_SELLER);
 }
 
-<br />
-<br />
-@Html.ActionLink("Inapoi", Utilities.ACTION_INDEX, Utilities.BIKE_CONTROLLER, new { @class = "btn btn-primary" })
-
 
 @if (adminOrSellerLoggedIn)
 {
@@ -61,6 +57,7 @@
         <thead>
             <tr>
                 <th>Nume</th>
+                <th>Actiuni</th>
             </tr>
         </thead>
         <tbody>
@@ -68,6 +65,9 @@
             {
                 <tr>
                     <td>@p.Name</td>
+                    <td>
+                        @Html.ActionLink("Mai multe detalii", Utilities.ACTION_DETAILS, Utilities.PIECE_CONTROLLER, new { id = p.PieceId }, new { @class = "btn btn-primary" })
+                    </td>
                 </tr>
             }
         </tbody>

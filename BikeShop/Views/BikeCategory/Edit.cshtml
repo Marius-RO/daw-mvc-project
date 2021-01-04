@@ -4,7 +4,7 @@
     ViewBag.Title = "Edit";
 }
 
-<h2>Editeaza categoria @Model.Name</h2>
+<h2>Editeaza categoria de biciclete @Model.Name</h2>
 
 @using (Html.BeginForm(actionName: Utilities.ACTION_UPDATE, controllerName: Utilities.BIKE_CATEGORY_CONTROLLER))
 {
@@ -46,31 +46,39 @@
                 {
                     for (int i = 0; i < Model.CheckBoxesList.Count(); i++)
                     {
-                        <tr>
-                            <td>
-                                @Html.HiddenFor(b => b.CheckBoxesList[i].Id)
-                                @Html.HiddenFor(b => b.CheckBoxesList[i].Name)
-                                @Html.HiddenFor(b => b.CheckBoxesList[i].DisplayName)
-                                @Html.CheckBoxFor(b => b.CheckBoxesList[i].Checked)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(b => b.CheckBoxesList[i].DisplayName)
-                            </td>
-                            @if (Model.CheckBoxesList[i].Object != null)
+                    <tr>
+                        <td>
+                            @Html.HiddenFor(b => b.CheckBoxesList[i].Id)
+                            @Html.HiddenFor(b => b.CheckBoxesList[i].Name)
+                            @Html.HiddenFor(b => b.CheckBoxesList[i].DisplayName)
+                            @if (!Model.CheckBoxesList[i].Checked)
                             {
-                                <td>
-                                    @Model.CheckBoxesList[i].Object.BikerType.Name
-                                </td>
-                                <td>
-                                    @Model.CheckBoxesList[i].Object.BikeCategory.Name
-                                </td>
+                                @Html.CheckBoxFor(b => b.CheckBoxesList[i].Checked)
                             }
                             else
                             {
-                                <td></td>
-                                <td></td>
+                                @Html.HiddenFor(b => b.CheckBoxesList[i].Checked)
+                                <span>Apartine categoriei</span>
                             }
-                        </tr>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(b => b.CheckBoxesList[i].DisplayName)
+                        </td>
+                        @if (Model.CheckBoxesList[i].Object != null)
+                        {
+                            <td>
+                                @Model.CheckBoxesList[i].Object.BikeCategory.Name
+                            </td>
+                            <td>
+                                @Model.CheckBoxesList[i].Object.BikerType.Name
+                            </td>
+                        }
+                        else
+                        {
+                            <td></td>
+                            <td></td>
+                        }
+                    </tr>
                     }
                 }
 

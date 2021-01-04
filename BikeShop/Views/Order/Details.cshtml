@@ -5,10 +5,6 @@
     bool adminOrSellerLoggedIn = User.IsInRole(Utilities.ROLE_ADMIN) || User.IsInRole(Utilities.ROLE_SELLER);
 }
 
-<br />
-<br />
-@Html.ActionLink("Inapoi", Utilities.ACTION_INDEX, Utilities.ORDER_CONTROLLER, new { @class = "btn btn-primary" })
-
 
 @if (adminOrSellerLoggedIn)
 {
@@ -67,7 +63,7 @@
             {
                 <tr>
                     <td>@p.Name</td>
-                    <td>@p.Quantity</td>
+                    <td>1</td>
                     <td>@p.Price</td>
                 </tr>
             }
@@ -91,7 +87,7 @@
             {
                 <tr>
                     <td>@p.Name</td>
-                    <td>@p.Quantity</td>
+                    <td>1</td>
                     <td>@p.Price</td>
                 </tr>
             }

@@ -5,9 +5,6 @@
     bool adminOrSellerLoggedIn = User.IsInRole(Utilities.ROLE_ADMIN) || User.IsInRole(Utilities.ROLE_SELLER);
 }
 
-<br />
-<br />
-@Html.ActionLink("Inapoi", Utilities.ACTION_INDEX, Utilities.PIECE_CONTROLLER, new { @class = "btn btn-primary" })
 
 @if (adminOrSellerLoggedIn)
 {
@@ -45,28 +42,28 @@ else
 }
 
 <hr />
+<h3>Data fabricatie</h3>
+@Model.FabricationDate
+
+<hr />
 <h3>Pentru vanzare</h3>
 @if (@Model.IsIndependent)
 {
     <p>Da</p>
+
+    <hr />
+    <h3>Pret</h3>
+    @Model.Price
+
+    <hr />
+    <h3>Cantitate stoc</h3>
+    @Model.Quantity
 }
 else
 {
     <p>Nu</p>
 }
 
-
-<hr />
-<h3>Data fabricatie</h3>
-@Model.FabricationDate
-
-<hr />
-<h3>Pret</h3>
-@Model.Price
-
-<hr />
-<h3>Cantitate stoc</h3>
-@Model.Quantity
 
 <hr />
 <h3>Biciclete care contin aceasta piesa</h3>
@@ -77,15 +74,19 @@ else
             <tr>
                 <th>Nume</th>
                 <th>Categorie bicicleta</th>
+                <th>Actiuni</th>
             </tr>
         </thead>
         <tbody>
             @foreach (BikeShop.Models.Bike b in Model.Bikes)
             {
-                <tr>
-                    <td>@b.Name</td>
-                    <td>@b.BikeCategory.Name</td>
-                </tr>
+            <tr>
+                <td>@b.Name</td>
+                <td>@b.BikeCategory.Name</td>
+                <td>
+                    @Html.ActionLink("Mai multe detalii", Utilities.ACTION_DETAILS, Utilities.BIKE_CONTROLLER, new { id = b.BikeId }, new { @class = "btn btn-primary" })
+                </td>
+            </tr>
             }
 
         </tbody>

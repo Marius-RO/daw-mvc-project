@@ -60,12 +60,7 @@
                                 @Html.HiddenFor(b => b.BikesListCheckBoxes[i].Id)
                                 @Html.HiddenFor(b => b.BikesListCheckBoxes[i].Name)
                                 @Html.HiddenFor(b => b.BikesListCheckBoxes[i].DisplayName)
-
-                                @if (Model.BikesListCheckBoxes[i].Object != null && Model.BikesListCheckBoxes[i].Object.Quantity > 0)
-                                {
-                                    @Html.CheckBoxFor(b => b.BikesListCheckBoxes[i].Checked)
-                                }
-
+                                @Html.CheckBoxFor(b => b.BikesListCheckBoxes[i].Checked)
                             </td>
 
                             <td>
@@ -75,7 +70,7 @@
                                 {
                                     <br />
                                     @Html.ActionLink("Mai multe detalii", Utilities.ACTION_DETAILS, Utilities.BIKE_CONTROLLER,
-                                   new { id = Model.BikesListCheckBoxes[i].Object.BikeId })
+                                   new { id = Model.BikesListCheckBoxes[i].Object.BikeId }, new { })
                                 }
                             </td>
 
@@ -135,11 +130,7 @@
                                 @Html.HiddenFor(b => b.PiecesListCheckBoxes[i].Id)
                                 @Html.HiddenFor(b => b.PiecesListCheckBoxes[i].Name)
                                 @Html.HiddenFor(b => b.PiecesListCheckBoxes[i].DisplayName)
-
-                                @if (Model.PiecesListCheckBoxes[i].Object != null && Model.PiecesListCheckBoxes[i].Object.Quantity > 0)
-                                {
-                                    @Html.CheckBoxFor(b => b.PiecesListCheckBoxes[i].Checked)
-                                }
+                                @Html.CheckBoxFor(b => b.PiecesListCheckBoxes[i].Checked)
                             </td>
 
                             <td>
@@ -147,7 +138,7 @@
                                 @if (Model.PiecesListCheckBoxes[i].Object != null)
                                 {
                                     @Html.ActionLink("Mai multe detalii", Utilities.ACTION_DETAILS, Utilities.PIECE_CONTROLLER,
-                                        new { id = Model.PiecesListCheckBoxes[i].Object.PieceId })
+                                        new { id = Model.PiecesListCheckBoxes[i].Object.PieceId } , new { })
                                 }
                                 <br />
 

@@ -54,7 +54,7 @@
                 var btnDelete = $(this);
                 var typeId = btnDelete.attr("data-id");
 
-                if (confirm("Esti sigur?")) {
+                if (confirm("Toate bicicletele din aceasta categorie vor fi sterse. Esti sigur?")) {
                     $.ajax(
                         {
                             url: "@Utilities.BIKER_TYPE_CONTROLLER/@Utilities.ACTION_DELETE/" + typeId,
