@@ -19,8 +19,9 @@
 <table id="orders" class="table table-bordered table-hover">
     <thead>
         <tr>
-            <th>Nr. comanda</th>
+            <th>Cod comanda</th>
             <th>Nume client</th>
+            <th>Vanzator</th>
             <th>Data</th>
             <th>Total</th>
             <th>Actiuni</th>
@@ -33,6 +34,14 @@
             <tr>
                 <td>@p.OrderId</td>
                 <td>@p.DeliveryInfo.Name</td>
+                @if(p.Seller != null)
+                {
+                    <td>@p.Seller.Email</td>
+                }
+                else
+                {
+                    <td></td>
+                }
                 <td>@p.OrderDate</td>
                 <td>@p.OrderValue</td>
                 <td>

@@ -43,7 +43,8 @@ namespace BikeShop.Controllers
             if (id.HasValue)
             {
                 Order order = ctx.Orders.Find(id);
-                if (order != null && (order.UserId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
+                if (order != null && (order.SellerId == User.Identity.GetUserId() || order.UserId == User.Identity.GetUserId() || 
+                    User.IsInRole(Utilities.ROLE_ADMIN)))
                 {
                     return View(order);
                 }
@@ -62,9 +63,9 @@ namespace BikeShop.Controllers
             Order order = new Order();
             order.UserId = User.Identity.GetUserId();
             order.DeliveryInfo = new DeliveryInfo();
-            order.BikesListCheckBoxes = Utilities.GetAllBikeCheckBoxes(ctx);
-            order.PiecesListCheckBoxes = Utilities.GetAllPiecesCheckBoxes(ctx);
- 
+            order.BikesListCheckBoxes = Utilities.GetAllBikeCheckBoxes(ctx, inStoc: true);
+            order.PiecesListCheckBoxes = Utilities.GetAllPiecesCheckBoxes(ctx, forSale: true, inStoc: true);
+
             return View(order);
         }
 
@@ -77,8 +78,8 @@ namespace BikeShop.Controllers
                 if (!ModelState.IsValid)
                 {
                     // reload checkboxes
-                    order.BikesListCheckBoxes = Utilities.GetAllBikeCheckBoxes(ctx);
-                    order.PiecesListCheckBoxes = Utilities.GetAllPiecesCheckBoxes(ctx);
+                    order.BikesListCheckBoxes = Utilities.GetAllBikeCheckBoxes(ctx, inStoc: true);
+                    order.PiecesListCheckBoxes = Utilities.GetAllPiecesCheckBoxes(ctx, forSale: true, inStoc: true);
                     return View("New", order);
                 }
 
@@ -103,11 +104,7 @@ namespace BikeShop.Controllers
                     {
                         order.Bikes.Add(bike);
                         orderValue += bike.Price;
-
-                        if (sellerId != null)
-                        {
-                            sellerId = bike.UserId;
-                        }
+                        sellerId = bike.UserId;
                     }
                 }
 
@@ -126,11 +123,7 @@ namespace BikeShop.Controllers
                     {
                         order.Pieces.Add(piece);
                         orderValue += piece.Price;
-
-                        if (sellerId != null)
-                        {
-                            sellerId = piece.UserId;
-                        }
+                        sellerId = piece.UserId;
                     }
                 }
 
@@ -141,6 +134,20 @@ namespace BikeShop.Controllers
 
                 ctx.Orders.Add(order);
                 ctx.SaveChanges();
+
+                // order is saved --> modify quantities
+                foreach(Bike orderedBike in order.Bikes)
+                {
+                    orderedBike.Quantity--;
+                    ctx.SaveChanges();
+                }
+
+                foreach(Piece orderedPiece in order.Pieces)
+                {
+                    orderedPiece.Quantity--;
+                    ctx.SaveChanges();
+                }
+
                 return RedirectToAction("Index");
             }
             catch (Exception e)
@@ -158,11 +165,11 @@ namespace BikeShop.Controllers
             if (id.HasValue)
             {
                 Order order = ctx.Orders.Find(id);
-                if (order != null && (order.UserId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
+                if (order != null && (order.SellerId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
                 {
                     // reload check boxes lists
-                    order.BikesListCheckBoxes = Utilities.GetAllBikeCheckBoxes(ctx);
-                    order.PiecesListCheckBoxes = Utilities.GetAllPiecesCheckBoxes(ctx);
+                    order.BikesListCheckBoxes = Utilities.GetAllBikeCheckBoxes(ctx, inStoc: true);
+                    order.PiecesListCheckBoxes = Utilities.GetAllPiecesCheckBoxes(ctx, forSale: true, inStoc: true);
 
                     // mark selected bikes
                     foreach (Bike checkedBike in order.Bikes)
@@ -195,17 +202,17 @@ namespace BikeShop.Controllers
                 {
                     // reload selected bikes and pieces
                     Order tmp = ctx.Orders.Find(updatedOrder.OrderId);
-                    if (tmp != null && (tmp.UserId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
+                    if (tmp != null && (tmp.SellerId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
                     {
                         updatedOrder.Bikes = tmp.Bikes;
-                        updatedOrder.BikesListCheckBoxes = Utilities.GetAllBikeCheckBoxes(ctx);
+                        updatedOrder.BikesListCheckBoxes = Utilities.GetAllBikeCheckBoxes(ctx, inStoc: true);
                         foreach (Bike checkedBike in updatedOrder.Bikes)
                         {
                             updatedOrder.BikesListCheckBoxes.FirstOrDefault(c => c.Id == checkedBike.BikeId).Checked = true;
                         }
 
                         updatedOrder.Pieces = tmp.Pieces;
-                        updatedOrder.PiecesListCheckBoxes = Utilities.GetAllPiecesCheckBoxes(ctx);
+                        updatedOrder.PiecesListCheckBoxes = Utilities.GetAllPiecesCheckBoxes(ctx, forSale: true, inStoc: true);
                         foreach (Piece checkedPiece in updatedOrder.Pieces)
                         {
                             updatedOrder.PiecesListCheckBoxes.FirstOrDefault(c => c.Id == checkedPiece.PieceId).Checked = true;
@@ -231,7 +238,7 @@ namespace BikeShop.Controllers
 
                 // update order an delivery info
                 Order order = ctx.Orders.Single(b => b.OrderId == updatedOrder.OrderId);
-                if (order == null || !(order.UserId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
+                if (order == null || !(order.SellerId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
                 {
                     return HttpNotFound("Nu s-a gasit comanda cu id-ul " + updatedOrder.OrderId.ToString() + "!");
                 }
@@ -252,8 +259,23 @@ namespace BikeShop.Controllers
 
                     order.OrderDate = updatedOrder.OrderDate;
                     order.DeliveryInfo = deliveryInfo;
+
+                    // add quantities back
+                    // order is saved --> modify quantities
+                    foreach (Bike orderedBike in order.Bikes)
+                    {
+                        orderedBike.Quantity++;
+                        ctx.SaveChanges();
+                    }
                     order.Bikes.Clear();
                     order.Bikes = new List<Bike>();
+
+
+                    foreach (Piece orderedPiece in order.Pieces)
+                    {
+                        orderedPiece.Quantity++;
+                        ctx.SaveChanges();
+                    }
                     order.Pieces.Clear();
                     order.Pieces = new List<Piece>();
 
@@ -294,8 +316,21 @@ namespace BikeShop.Controllers
 
                     order.SellerId = sellerId;
                     order.OrderValue = orderValue;
-
                     ctx.SaveChanges();
+
+                    // order is saved --> modify quantities
+                    foreach (Bike orderedBike in order.Bikes)
+                    {
+                        orderedBike.Quantity--;
+                        ctx.SaveChanges();
+                    }
+
+                    foreach (Piece orderedPiece in order.Pieces)
+                    {
+                        orderedPiece.Quantity--;
+                        ctx.SaveChanges();
+                    }
+
                     return RedirectToAction("Index");
 
                 }
@@ -321,7 +356,7 @@ namespace BikeShop.Controllers
             if (id.HasValue)
             {
                 Order order = ctx.Orders.Find(id);
-                if (order != null && (order.UserId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
+                if (order != null && (order.SellerId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
                 {
                     DeliveryInfo deliveryInfo = ctx.DeliveryInfos.Find(order.DeliveryInfo.DeliveryInfoId);
 

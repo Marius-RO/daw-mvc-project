@@ -11,7 +11,7 @@ namespace BikeShop.Models
 
         [Display(Name = "Nume categorie biciclist")]
         [Required(ErrorMessage = "Numele categoriei de biciclist nu a fost introdus")]
-        [RegularExpression(@"^[ a-zA-Z0-9_-]{5,20}$", ErrorMessage = "Numele categoriei de biciclist trebuie sa contina intre 5 si 20 de caractere [ a-zA-Z0-9_-]")]
+        [RegularExpression(@"^[ a-zA-Z0-9_-]{5,40}$", ErrorMessage = "Numele categoriei de biciclist trebuie sa contina intre 5 si 40 de caractere [ a-zA-Z0-9_-]")]
         public string Name { get; set; }
 
         [Display(Name = "Descriere")]

@@ -34,10 +34,13 @@
 <h3>Adresa de livrare</h3>
 @Model.DeliveryInfo.Address
 
+@if (@Model.Seller != null)
+{
+    <hr />
+    <h3>Vanzator</h3>
+    @Model.Seller.Email
+}
 
-<hr />
-<h3>Vanzator</h3>
-@Model.SellerId
 
 <hr />
 <h3>Data creare</h3>
@@ -59,14 +62,14 @@
             </tr>
         </thead>
         <tbody>
-      
+
             @foreach (BikeShop.Models.Bike p in Model.Bikes)
-            {  
-            <tr>
-                <td>@p.Name</td>
-                <td>@p.Quantity</td>
-                <td>@p.Price</td>
-            </tr>
+            {
+                <tr>
+                    <td>@p.Name</td>
+                    <td>@p.Quantity</td>
+                    <td>@p.Price</td>
+                </tr>
             }
         </tbody>
     </table>

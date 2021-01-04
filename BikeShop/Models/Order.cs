@@ -13,9 +13,6 @@ namespace BikeShop.Models
         [Key]
         public int OrderId { get; set; }
 
-
-        public string SellerId { get; set; }
-
         [MaxLength(30, ErrorMessage = "Formatul datei este prea lung")]
         public string OrderDate { get; set; }
 
@@ -25,6 +22,11 @@ namespace BikeShop.Models
         // one-to-one
         [Required]
         public virtual DeliveryInfo DeliveryInfo { get; set; }
+
+        // one-to-many
+        public string SellerId { get; set; }
+        public virtual ApplicationUser Seller { get; set; }
+
 
         // one-to-many
         public string UserId { get; set; }
