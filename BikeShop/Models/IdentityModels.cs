@@ -193,7 +193,7 @@ namespace BikeShop.Models
                 BikeCategory category2 = new BikeCategory
                 {
                     CategoryId = categoriesNr,
-                    Name = symbol + " - categorie 1",
+                    Name = symbol + " - categorie 2",
                     Description = symbol + " - categorie 2",
                     UserId = userId
                 };
@@ -243,7 +243,7 @@ namespace BikeShop.Models
                     Quantity = 5,
                     Price = 50,
                     IsIndependent = false,
-                    IsAccessory = false,
+                    IsAccessory = true,
                     ImagePath = "../Images/Pieces/piece_" + piecesNr + ".jpg",
                     UserId = userId
                 };

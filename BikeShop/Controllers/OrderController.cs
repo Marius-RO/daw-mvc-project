@@ -3,6 +3,7 @@ using BikeShop.Models;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -104,7 +105,11 @@ namespace BikeShop.Controllers
                     {
                         order.Bikes.Add(bike);
                         orderValue += bike.Price;
-                        sellerId = bike.UserId;
+
+                        if(sellerId == null)
+                        {
+                            sellerId = bike.UserId;
+                        }
                     }
                 }
 
@@ -123,7 +128,10 @@ namespace BikeShop.Controllers
                     {
                         order.Pieces.Add(piece);
                         orderValue += piece.Price;
-                        sellerId = piece.UserId;
+                        if(sellerId == null)
+                        {
+                            sellerId = piece.UserId;
+                        }
                     }
                 }
 
@@ -131,29 +139,27 @@ namespace BikeShop.Controllers
                 order.SellerId = sellerId;
                 order.OrderValue = orderValue;
                 order.OrderDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-
-                ctx.Orders.Add(order);
-                ctx.SaveChanges();
-
-                // order is saved --> modify quantities
+   
+                // modify quantities
                 foreach(Bike orderedBike in order.Bikes)
                 {
                     orderedBike.Quantity--;
-                    ctx.SaveChanges();
                 }
 
                 foreach(Piece orderedPiece in order.Pieces)
                 {
                     orderedPiece.Quantity--;
-                    ctx.SaveChanges();
+                    
                 }
+
+                ctx.Orders.Add(order);
+                ctx.SaveChanges();
 
                 return RedirectToAction("Index");
             }
             catch (Exception e)
             {
-                var msg = e.Message;
-                Console.WriteLine(e.Message);
+                Console.WriteLine("[Create order]" + e.Message);
                 return View("New",order);
             }
         }
@@ -168,18 +174,53 @@ namespace BikeShop.Controllers
                 if (order != null && (order.SellerId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
                 {
                     // reload check boxes lists
-                    order.BikesListCheckBoxes = Utilities.GetAllBikeCheckBoxes(ctx, inStoc: true);
-                    order.PiecesListCheckBoxes = Utilities.GetAllPiecesCheckBoxes(ctx, forSale: true, inStoc: true);
+                    // for seller show only his products
+                    string userId = User.Identity.GetUserId();
+                    if (User.IsInRole(Utilities.ROLE_ADMIN))
+                    {
+                        userId = null;
+                    }
+
+                    // get only in stoc products
+                    order.BikesListCheckBoxes = Utilities.GetAllBikeCheckBoxes(ctx, userId: userId, inStoc: true);
+                    order.PiecesListCheckBoxes = Utilities.GetAllPiecesCheckBoxes(ctx, userId: userId, forSale: true, inStoc: true);
+
 
                     // mark selected bikes
                     foreach (Bike checkedBike in order.Bikes)
                     {
+                        // add product from current order if now is out of stoc
+                        if (checkedBike.Quantity == 0)
+                        {
+                            order.BikesListCheckBoxes.Add(new CheckBoxModel<Bike>
+                            {
+                                Id = checkedBike.BikeId,
+                                Name = checkedBike.Name,
+                                DisplayName = "  " + checkedBike.Name,
+                                Checked = true,
+                                Object = checkedBike
+                            });
+                            continue;
+                        }
                         order.BikesListCheckBoxes.FirstOrDefault(c => c.Id == checkedBike.BikeId).Checked = true;
                     }
 
                     // mark selected pieces
                     foreach (Piece checkedPiece in order.Pieces)
                     {
+                        // add product from current order if now is out of stoc
+                        if (checkedPiece.Quantity == 0)
+                        {
+                            order.PiecesListCheckBoxes.Add(new CheckBoxModel<Piece>
+                            {
+                                Id = checkedPiece.PieceId,
+                                Name = checkedPiece.Name,
+                                DisplayName = "  " + checkedPiece.Name,
+                                Checked = true,
+                                Object = checkedPiece
+                            });
+                            continue;
+                        }
                         order.PiecesListCheckBoxes.FirstOrDefault(c => c.Id == checkedPiece.PieceId).Checked = true;
                     }
 
@@ -205,16 +246,50 @@ namespace BikeShop.Controllers
                     if (tmp != null && (tmp.SellerId == User.Identity.GetUserId() || User.IsInRole(Utilities.ROLE_ADMIN)))
                     {
                         updatedOrder.Bikes = tmp.Bikes;
-                        updatedOrder.BikesListCheckBoxes = Utilities.GetAllBikeCheckBoxes(ctx, inStoc: true);
+
+                        // for seller show only his products
+                        string userId = User.Identity.GetUserId();
+                        if (User.IsInRole(Utilities.ROLE_ADMIN))
+                        {
+                            userId = null;
+                        }
+
+                        updatedOrder.BikesListCheckBoxes = Utilities.GetAllBikeCheckBoxes(ctx, userId: userId, inStoc: true);
                         foreach (Bike checkedBike in updatedOrder.Bikes)
                         {
+                            // add product from current order if now is out of stoc
+                            if (checkedBike.Quantity == 0)
+                            {
+                                updatedOrder.BikesListCheckBoxes.Add(new CheckBoxModel<Bike>
+                                {
+                                    Id = checkedBike.BikeId,
+                                    Name = checkedBike.Name,
+                                    DisplayName = "  " + checkedBike.Name,
+                                    Checked = true,
+                                    Object = checkedBike
+                                });
+                                continue;
+                            }
                             updatedOrder.BikesListCheckBoxes.FirstOrDefault(c => c.Id == checkedBike.BikeId).Checked = true;
                         }
 
                         updatedOrder.Pieces = tmp.Pieces;
-                        updatedOrder.PiecesListCheckBoxes = Utilities.GetAllPiecesCheckBoxes(ctx, forSale: true, inStoc: true);
+                        updatedOrder.PiecesListCheckBoxes = Utilities.GetAllPiecesCheckBoxes(ctx, userId: userId, forSale: true, inStoc: true);
                         foreach (Piece checkedPiece in updatedOrder.Pieces)
                         {
+                            // add product from current order if now is out of stoc
+                            if (checkedPiece.Quantity == 0)
+                            {
+                                updatedOrder.PiecesListCheckBoxes.Add(new CheckBoxModel<Piece>
+                                {
+                                    Id = checkedPiece.PieceId,
+                                    Name = checkedPiece.Name,
+                                    DisplayName = "  " + checkedPiece.Name,
+                                    Checked = true,
+                                    Object = checkedPiece
+                                });
+                                continue;
+                            }
                             updatedOrder.PiecesListCheckBoxes.FirstOrDefault(c => c.Id == checkedPiece.PieceId).Checked = true;
                         }
                     }
@@ -255,43 +330,37 @@ namespace BikeShop.Controllers
                     deliveryInfo.Name = updatedOrder.DeliveryInfo.Name;
                     deliveryInfo.PhoneNumber = updatedOrder.DeliveryInfo.PhoneNumber;
                     deliveryInfo.Address = updatedOrder.DeliveryInfo.Address;
-                    ctx.SaveChanges();
 
                     order.OrderDate = updatedOrder.OrderDate;
                     order.DeliveryInfo = deliveryInfo;
 
                     // add quantities back
-                    // order is saved --> modify quantities
                     foreach (Bike orderedBike in order.Bikes)
                     {
                         orderedBike.Quantity++;
-                        ctx.SaveChanges();
                     }
-                    order.Bikes.Clear();
-                    order.Bikes = new List<Bike>();
-
 
                     foreach (Piece orderedPiece in order.Pieces)
                     {
                         orderedPiece.Quantity++;
-                        ctx.SaveChanges();
                     }
-                    order.Pieces.Clear();
-                    order.Pieces = new List<Piece>();
-
+                
                     float orderValue = 0.0f;
                     string sellerId = null;
 
                     // add new bikes if any
+                    order.Bikes.Clear();
+                    order.Bikes = new List<Bike>();
                     for (int i = 0; i < selectedBikes.Count(); i++)
                     {
                         Bike bike = ctx.Bikes.Find(selectedBikes[i].Id);
                         if (bike != null )
                         {
+                            bike.Quantity--;
                             order.Bikes.Add(bike);
                             orderValue += bike.Price;
 
-                            if(sellerId != null)
+                            if(sellerId == null)
                             {
                                 sellerId = bike.UserId;
                             }
@@ -299,15 +368,18 @@ namespace BikeShop.Controllers
                     }
 
                     // add new pieces if any
+                    order.Pieces.Clear();
+                    order.Pieces = new List<Piece>();
                     for (int i = 0; i < selectedPieces.Count(); i++)
                     {
                         Piece piece = ctx.Pieces.Find(selectedPieces[i].Id);
                         if (piece != null)
                         {
+                            piece.Quantity--;
                             order.Pieces.Add(piece);
                             orderValue += piece.Price;
 
-                            if (sellerId != null)
+                            if (sellerId == null)
                             {
                                 sellerId = piece.UserId;
                             }
@@ -316,20 +388,8 @@ namespace BikeShop.Controllers
 
                     order.SellerId = sellerId;
                     order.OrderValue = orderValue;
+
                     ctx.SaveChanges();
-
-                    // order is saved --> modify quantities
-                    foreach (Bike orderedBike in order.Bikes)
-                    {
-                        orderedBike.Quantity--;
-                        ctx.SaveChanges();
-                    }
-
-                    foreach (Piece orderedPiece in order.Pieces)
-                    {
-                        orderedPiece.Quantity--;
-                        ctx.SaveChanges();
-                    }
 
                     return RedirectToAction("Index");
 
@@ -341,8 +401,7 @@ namespace BikeShop.Controllers
             }
             catch (Exception e)
             {
-                var msg = e.Message;
-                Console.WriteLine(e.Message);
+                Console.WriteLine("[Update order]" + e.Message);
                 return View("Edit", updatedOrder);
             }
 

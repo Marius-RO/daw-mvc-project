@@ -169,10 +169,9 @@ namespace BikeShop.Controllers
                 {
                     category.Name = updatedCategory.Name;
                     category.Description = updatedCategory.Description;
-                    category.Bikes.Clear();
-                    category.Bikes = new List<Bike>();
 
-                    // add new bikes if any
+                    // add new bikes
+                    category.Bikes.Clear();
                     for (int i = 0; i < selectedCheckBoxes.Count(); i++)
                     {
                         Bike bike = ctx.Bikes.Find(selectedCheckBoxes[i].Id);

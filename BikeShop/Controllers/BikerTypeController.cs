@@ -167,10 +167,9 @@ namespace BikeShop.Controllers
                 {
                     type.Name = updatedType.Name;
                     type.Description = updatedType.Description;
-                    type.Bikes.Clear();
-                    type.Bikes = new List<Bike>();
 
-                    // add new bikes if any
+                    // add bikes
+                    type.Bikes.Clear();
                     for (int i = 0; i < selectedCheckBoxes.Count(); i++)
                     {
                         Bike bike = ctx.Bikes.Find(selectedCheckBoxes[i].Id);
@@ -179,7 +178,7 @@ namespace BikeShop.Controllers
                             type.Bikes.Add(bike);
                         }
                     }
-
+                    
                     ctx.SaveChanges();
                     return RedirectToAction("Index");
                 }

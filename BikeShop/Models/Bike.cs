@@ -29,7 +29,7 @@ namespace BikeShop.Models
         public DateTime FabricationDate { get; set; }
 
         [Display(Name = "Cantitate")]
-        [Range(1,100, ErrorMessage = "Cantitate incorecta (1,100)")]
+        [Range(0,100, ErrorMessage = "Cantitate incorecta (0,100)")]
         public int Quantity { get; set; }
 
         [Display(Name = "Pret")]

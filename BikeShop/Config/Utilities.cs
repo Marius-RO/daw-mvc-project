@@ -50,7 +50,7 @@ namespace BikeShop.Config
             }
             foreach (var piece in pieceList)
             {
-                if((inStoc && piece.Quantity == 0) || (forSale && !piece.IsIndependent))
+                if(((inStoc && piece.Quantity == 0)) || (forSale && !piece.IsIndependent))
                 {
                     continue;
                 }
