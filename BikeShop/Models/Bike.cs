@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Web.Mvc;
-using BikeShop.Config;
 using BikeShop.Models.Validations;
 
 namespace BikeShop.Models

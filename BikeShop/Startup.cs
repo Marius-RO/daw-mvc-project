@@ -1,13 +1,5 @@
-﻿using BikeShop.Config;
-using BikeShop.Models;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Microsoft.Owin;
+﻿using Microsoft.Owin;
 using Owin;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.Validation;
-using System.Diagnostics;
 
 [assembly: OwinStartupAttribute(typeof(BikeShop.Startup))]
 namespace BikeShop
