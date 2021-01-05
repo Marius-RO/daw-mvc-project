@@ -81,7 +81,7 @@ namespace BikeShop.Controllers
                     // reload checkboxes
                     order.BikesListCheckBoxes = Utilities.GetAllBikeCheckBoxes(ctx, inStoc: true);
                     order.PiecesListCheckBoxes = Utilities.GetAllPiecesCheckBoxes(ctx, forSale: true, inStoc: true);
-                    return View("New", order);
+                    return View(Utilities.VIEW_NEW, order);
                 }
 
                 // add delivery info to db
@@ -155,12 +155,12 @@ namespace BikeShop.Controllers
                 ctx.Orders.Add(order);
                 ctx.SaveChanges();
 
-                return RedirectToAction("Index");
+                return RedirectToAction(Utilities.ACTION_INDEX);
             }
             catch (Exception e)
             {
                 Console.WriteLine("[Create order]" + e.Message);
-                return View("New",order);
+                return View(Utilities.VIEW_NEW, order);
             }
         }
 
@@ -294,7 +294,7 @@ namespace BikeShop.Controllers
                         }
                     }
 
-                    return View("Edit", updatedOrder);
+                    return View(Utilities.VIEW_EDIT, updatedOrder);
                 }
 
                 // get selected bikes
@@ -391,18 +391,18 @@ namespace BikeShop.Controllers
 
                     ctx.SaveChanges();
 
-                    return RedirectToAction("Index");
+                    return RedirectToAction(Utilities.ACTION_INDEX);
 
                 }
 
                 Console.WriteLine("Update-ul pentru comanda cu id-ul = " + updatedOrder.OrderId + " nu a reusit");
-                return RedirectToAction("Index");
+                return RedirectToAction(Utilities.ACTION_INDEX);
 
             }
             catch (Exception e)
             {
                 Console.WriteLine("[Update order]" + e.Message);
-                return View("Edit", updatedOrder);
+                return View(Utilities.VIEW_EDIT, updatedOrder);
             }
 
         }
@@ -424,7 +424,7 @@ namespace BikeShop.Controllers
                         ctx.Orders.Remove(order);
                         ctx.DeliveryInfos.Remove(deliveryInfo);
                         ctx.SaveChanges();
-                        return RedirectToAction("Index");
+                        return RedirectToAction(Utilities.ACTION_INDEX);
                     }
 
                     return HttpNotFound("Nu s-a gasit informatia de livrare cu id-ul " + order.DeliveryInfo.DeliveryInfoId.ToString() + "!");

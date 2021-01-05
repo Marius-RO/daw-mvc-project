@@ -70,7 +70,7 @@ namespace BikeShop.Controllers
                 {
                     // reload checkboxes
                     category.CheckBoxesList = Utilities.GetAllBikeCheckBoxes(ctx, userId: category.UserId);
-                    return View("New", category);
+                    return View(Utilities.VIEW_NEW, category);
                 }
 
                 // add bikes if any
@@ -93,13 +93,13 @@ namespace BikeShop.Controllers
                 // add info in db
                 ctx.BikeCategories.Add(category);
                 ctx.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction(Utilities.ACTION_INDEX);
             }
             catch (Exception e)
             {
                 var msg = e.Message;
                 Console.WriteLine(e.Message);
-                return View("New", category);
+                return View(Utilities.VIEW_NEW, category);
             }
         }
 
@@ -148,7 +148,7 @@ namespace BikeShop.Controllers
                         }
                     }
 
-                    return View("Edit", updatedCategory);
+                    return View(Utilities.VIEW_EDIT, updatedCategory);
                 }
 
                 // get selected bikes
@@ -182,18 +182,18 @@ namespace BikeShop.Controllers
                     }
 
                     ctx.SaveChanges();
-                    return RedirectToAction("Index");
+                    return RedirectToAction(Utilities.ACTION_INDEX);
                 }
 
                 Console.WriteLine("Update-ul pentru bikeCategoryId = " + updatedCategory.CategoryId + " nu a reusit");
-                return RedirectToAction("Index");
+                return RedirectToAction(Utilities.ACTION_INDEX);
 
             }
             catch (Exception e)
             {
                 var msg = e.Message;
                 Console.WriteLine(e.Message);
-                return View("Edit", updatedCategory);
+                return View(Utilities.VIEW_EDIT, updatedCategory);
             }
         }
 
@@ -209,7 +209,7 @@ namespace BikeShop.Controllers
                 {
                     ctx.BikeCategories.Remove(category);
                     ctx.SaveChanges();
-                    return RedirectToAction("Index");
+                    return RedirectToAction(Utilities.ACTION_INDEX);
                 }
 
                 return HttpNotFound("Nu s-a gasit categoria de bicicleta cu id-ul " + id.ToString() + "!");

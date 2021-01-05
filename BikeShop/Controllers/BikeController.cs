@@ -81,7 +81,7 @@ namespace BikeShop.Controllers
                     // reload select item lists
                     bike.BikerTypeList = Utilities.GetAllBikerTypes(ctx, userId: bike.UserId);
                     bike.BikeCategoryList = Utilities.GetAllBikeCategories(ctx, userId: bike.UserId);
-                    return View("New", bike);
+                    return View(Utilities.VIEW_NEW, bike);
                 }
 
                 bike.ImagePath = Utilities.BIKES_IMAGES_PATH + bike.ImagePath;
@@ -107,13 +107,13 @@ namespace BikeShop.Controllers
                 // add info in db
                 ctx.Bikes.Add(bike);
                 ctx.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction(Utilities.ACTION_INDEX);
             }
             catch (Exception e)
             {
                 var msg = e.Message;
                 Console.WriteLine(e.Message);
-                return View("New", bike);
+                return View(Utilities.VIEW_NEW, bike);
             }
         }
 
@@ -158,7 +158,7 @@ namespace BikeShop.Controllers
                     // reload select item lists
                     updatedBike.BikerTypeList = Utilities.GetAllBikerTypes(ctx, userId: updatedBike.UserId);
                     updatedBike.BikeCategoryList = Utilities.GetAllBikeCategories(ctx, userId: updatedBike.UserId);
-                    return View("Edit", updatedBike);
+                    return View(Utilities.VIEW_EDIT, updatedBike);
                 }
 
                 // get selected pieces
@@ -203,18 +203,18 @@ namespace BikeShop.Controllers
                     }
 
                     ctx.SaveChanges();
-                    return RedirectToAction("Index");
+                    return RedirectToAction(Utilities.ACTION_INDEX);
                 }
 
                 Console.WriteLine("Update-ul pentru bikeId = " + bike.BikeId + " nu a reusit");
-                return RedirectToAction("Index");
+                return RedirectToAction(Utilities.ACTION_INDEX);
 
             }
             catch (Exception e)
             {
                 var msg = e.Message;
                 Console.WriteLine(e.Message);
-                return View("Edit", updatedBike);
+                return View(Utilities.VIEW_EDIT, updatedBike);
             }
 
         }
@@ -231,7 +231,7 @@ namespace BikeShop.Controllers
                 {
                     ctx.Bikes.Remove(bike);
                     ctx.SaveChanges();
-                    return RedirectToAction("Index");
+                    return RedirectToAction(Utilities.ACTION_INDEX);
                 }
 
                 return HttpNotFound("Nu s-a gasit bicicleta cu id-ul " + id.ToString() + "!");
