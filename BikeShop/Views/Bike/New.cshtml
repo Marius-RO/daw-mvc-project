@@ -30,7 +30,7 @@
     <br />
     <br />
 
-    @Html.LabelFor(b => b.BikeCategory)
+    @Html.LabelFor(b => b.BikeCategoryId)
     <br />
     @Html.DropDownListFor(b => b.BikeCategoryId, new SelectList(Model.BikeCategoryList, "Value", "Text"), "Alege o categorie de bicicleta", new { @class = "form-control" })
     @Html.ValidationMessageFor(b => b.BikeCategoryId, "", new { @class = "text-danger" })

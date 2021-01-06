@@ -48,10 +48,9 @@ namespace BikeShop.Models
         {
             protected override void Seed(ApplicationDbContext ctx)
             {
-                CreateAdminAndUserRoles(ctx, addInitialTestingData: false);
-
                 try
                 {
+                    CreateAdminAndUserRoles(ctx, addInitialTestingData: true);
                     ctx.SaveChanges();
                     base.Seed(ctx);
                 }
@@ -256,7 +255,7 @@ namespace BikeShop.Models
                     Description = symbol + " - piesa 3",
                     FabricationDate = DateTime.Now,
                     Quantity = 5,
-                    Price = 50,
+                    Price = 120,
                     IsIndependent = false,
                     IsAccessory = false,
                     ImagePath = "../Images/Pieces/piece_" + piecesNr + ".jpg",
@@ -271,7 +270,7 @@ namespace BikeShop.Models
                     Description = symbol + " - piesa 4",
                     FabricationDate = DateTime.Now,
                     Quantity = 5,
-                    Price = 50,
+                    Price = 70,
                     IsIndependent = true,
                     IsAccessory = true,
                     ImagePath = "../Images/Pieces/piece_" + piecesNr + ".jpg",
@@ -301,7 +300,7 @@ namespace BikeShop.Models
                     Description = symbol + " - bike 2",
                     FabricationDate = DateTime.Now,
                     Quantity = 5,
-                    Price = 90,
+                    Price = 210,
                     ImagePath = "../Images/Bikes/bike_" + bikesNr + ".jpg",
                     BikerTypeId = typesNr,
                     BikeCategoryId = categoriesNr,
